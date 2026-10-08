@@ -1,0 +1,2358 @@
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: 'Exo', sans-serif;
+    background: #ffffff;
+}
+
+section {
+    position: relative;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+#home {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    overflow: hidden;
+
+    background-image:
+        url("assets/img/bg/honeycomb-dripping-honey-with-bees-flying.jpg");
+
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+
+#home .hero-video {
+
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    width: 100%;
+    height: 100%;
+
+    transform: translate(-50%, -50%);
+
+    object-fit: cover;
+
+    z-index: 0;
+
+    pointer-events: none;
+}
+
+
+#home .hero-overlay {
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(20, 15, 8, .60) 0%,
+            rgba(20, 15, 8, .28) 48%,
+            rgba(20, 15, 8, .14) 100%
+        );
+
+    z-index: 1;
+
+    pointer-events: none;
+}
+
+
+#home .hero-content {
+
+    position: relative;
+
+    z-index: 2;
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    padding-top: 70px;
+}
+
+
+#home .hero-text {
+
+    position: relative;
+
+    z-index: 3;
+
+    max-width: 850px;
+
+    margin: 0 auto;
+}
+
+
+#home .hero-text h2 {
+
+    position: relative;
+
+    z-index: 3;
+
+    margin: 0 0 18px;
+
+    color: #ffffff;
+
+    font-size: clamp(38px, 5.2vw, 70px);
+
+    line-height: 1.08;
+
+    font-weight: 800;
+
+    letter-spacing: -1.2px;
+
+    text-shadow:
+        0 5px 25px rgba(0, 0, 0, .30);
+}
+
+
+#home .hero-text p {
+
+    position: relative;
+
+    z-index: 3;
+
+    max-width: 680px;
+
+    margin: 0 auto;
+
+    color: rgba(255, 255, 255, .94);
+
+    font-size: clamp(16px, 1.6vw, 21px);
+
+    line-height: 1.7;
+
+    font-weight: 400;
+
+    text-shadow:
+        0 2px 10px rgba(0, 0, 0, .28);
+}
+
+
+/* =========================================================
+   FEATURED SERVICES - HONEYCOMB HEXAGON STYLE
+========================================================= */
+
+#featured-services {
+    position: relative;
+    margin: 0;
+    padding: 90px 0;
+    background: linear-gradient(180deg, #fdf6e3 0%, #f7ecc9 100%);
+    overflow: hidden;
+}
+
+/* dekorasi honeycomb di sudut */
+#featured-services::before,
+#featured-services::after {
+    content: "";
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    background-image:
+        repeating-linear-gradient(60deg,  transparent, transparent 33px, rgba(217,164,65,0.28) 33px, rgba(217,164,65,0.28) 35px),
+        repeating-linear-gradient(-60deg, transparent, transparent 33px, rgba(217,164,65,0.28) 33px, rgba(217,164,65,0.28) 35px),
+        repeating-linear-gradient(0deg,   transparent, transparent 33px, rgba(217,164,65,0.28) 33px, rgba(217,164,65,0.28) 35px);
+    background-size: 60px 104px;
+    opacity: .55;
+    pointer-events: none;
+    z-index: 0;
+}
+#featured-services::before { top: -90px; left: -130px; }
+#featured-services::after  { bottom: -110px; right: -130px; }
+
+#featured-services .fs-heading {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 55px;
+}
+
+#featured-services .fs-heading .fs-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #c8751c;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+#featured-services .fs-heading .fs-label span {
+    width: 34px;
+    height: 3px;
+    border-radius: 99px;
+    background: #d2781d;
+    display: inline-block;
+}
+
+#featured-services .fs-heading h2 {
+    margin: 0 0 12px;
+    color: #211d17;
+    font-weight: 800;
+    font-size: clamp(30px, 3.6vw, 44px);
+    letter-spacing: -.5px;
+}
+
+#featured-services .fs-heading p {
+    margin: 0;
+    color: #6a5f4d;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+#featured-services .service-item {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
+    padding: 3.4rem 1.4rem 2.4rem;
+    background: linear-gradient(180deg, #f4c453 0%, #dba62f 100%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    text-align: center;
+    box-shadow: 0 18px 30px -14px rgba(43, 32, 24, .35);
+    transition: transform .35s ease, box-shadow .35s ease;
+}
+
+#featured-services .service-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 26px 34px -14px rgba(43, 32, 24, .45);
+}
+
+#featured-services .service-item .icon {
+    width: 84px;
+    height: 84px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2b2018;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    color: #f3e9c9;
+    flex-shrink: 0;
+}
+
+#featured-services .service-item .icon svg {
+    width: 36px;
+    height: 36px;
+    stroke: #f3e9c9;
+    fill: none;
+}
+
+#featured-services .service-item h4 {
+    margin: 0 0 .8rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2b2018;
+}
+
+#featured-services .service-item p {
+    margin: 0;
+    color: #2b2018;
+    opacity: .85;
+    font-size: .86rem;
+    line-height: 1.55;
+    max-width: 230px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* =========================================================
+   ABOUT / KEBAIKAN ALAMI
+========================================================= */
+
+#about-jsr {
+
+    position: relative;
+
+    min-height: 620px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            rgba(25, 18, 8, .35),
+            rgba(25, 18, 8, .40)
+        ),
+        url("assets/img/bg/honeycomb-dripping-honey-with-bees-flying.jpg");
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-attachment: fixed;
+}
+
+
+#about-jsr .about-overlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(0,0,0,.05),
+            rgba(0,0,0,.40)
+        );
+
+    z-index: 1;
+}
+
+
+#about-jsr .about-content {
+
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 850px;
+
+    margin: 0 auto;
+
+    padding: 100px 20px;
+
+    color: #ffffff;
+
+    text-align: center;
+}
+
+
+#about-jsr .about-content h2 {
+
+    margin-bottom: 22px;
+
+    font-size: clamp(36px, 5vw, 58px);
+
+    line-height: 1.15;
+
+    font-weight: 800;
+
+    text-shadow:
+        0 4px 20px rgba(0,0,0,.35);
+}
+
+
+#about-jsr .about-content h2 em {
+
+    color: #f0b44d;
+
+    font-style: italic;
+}
+
+
+#about-jsr .about-content p {
+
+    margin-bottom: 14px;
+
+    color: rgba(255,255,255,.94);
+
+    font-size: 17px;
+
+    line-height: 1.8;
+
+    text-shadow:
+        0 2px 10px rgba(0,0,0,.3);
+}
+
+
+/* =========================================================
+   PRODUCT SECTION
+========================================================= */
+
+#products {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    z-index: 2;
+}
+
+
+#productHeroCarousel {
+
+    width: 100%;
+
+    overflow: hidden;
+}
+
+
+#products .carousel-item {
+
+    width: 100%;
+}
+
+
+.product-slide {
+
+    min-height: 620px;
+
+    padding: 80px 8%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 80px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #faf4e5 100%
+        );
+}
+
+
+.product-image-wrapper {
+
+    position: relative;
+
+    width: 50%;
+
+    min-height: 480px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+.product-image {
+
+    position: relative;
+
+    z-index: 5;
+
+    max-width: 480px;
+
+    width: 100%;
+
+    max-height: 500px;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(
+            0 25px 30px rgba(65,45,20,.18)
+        );
+
+    animation:
+        productFloat 5s ease-in-out infinite;
+}
+
+
+@keyframes productFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+
+/* =========================================================
+   HONEY BLOBS
+========================================================= */
+
+.honey-blob {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    filter: blur(1px);
+
+    pointer-events: none;
+}
+
+
+.blob-1 {
+
+    width: 270px;
+    height: 270px;
+
+    background:
+        rgba(229, 176, 66, .18);
+
+    top: 50%;
+    left: 50%;
+
+    transform:
+        translate(-50%, -50%);
+}
+
+
+.blob-2 {
+
+    width: 130px;
+    height: 130px;
+
+    background:
+        rgba(216, 133, 25, .10);
+
+    top: 20%;
+    left: 18%;
+
+    animation:
+        blobFloat 4s ease-in-out infinite;
+}
+
+
+.blob-3 {
+
+    width: 100px;
+    height: 100px;
+
+    background:
+        rgba(242, 193, 87, .16);
+
+    right: 15%;
+    bottom: 18%;
+
+    animation:
+        blobFloat 5s ease-in-out infinite reverse;
+}
+
+
+@keyframes blobFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+
+/* =========================================================
+   PRODUCT INFO
+========================================================= */
+
+.product-info {
+
+    position: relative;
+
+    z-index: 10;
+
+    width: 45%;
+
+    max-width: 550px;
+}
+
+
+.product-label {
+
+    display: inline-block;
+
+    margin-bottom: 14px;
+
+    color: #c7771b;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+
+.product-info h2 {
+
+    margin: 0 0 20px;
+
+    color: #202020;
+
+    font-size: clamp(40px, 5vw, 64px);
+
+    line-height: 1.05;
+
+    font-weight: 800;
+}
+
+
+.product-info p {
+
+    max-width: 500px;
+
+    margin-bottom: 28px;
+
+    color: #625b50;
+
+    font-size: 17px;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   PRODUCT BUTTON - WARNA MADU
+========================================================= */
+
+.product-info .btn {
+
+    position: relative;
+
+    z-index: 20;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 145px;
+
+    min-height: 48px;
+
+    padding: 12px 25px;
+
+    border: none;
+
+    border-radius: 50px;
+
+    /* WARNA MADU */
+    background: #d9a441;
+    color: #ffffff;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 10px 25px rgba(217, 164, 65, .35);
+
+    transition:
+        transform .3s ease,
+        background .3s ease,
+        box-shadow .3s ease;
+}
+
+
+.product-info .btn:hover {
+
+    background: #c27f3a;
+    transform: translateY(-3px);
+    box-shadow:
+        0 15px 30px rgba(194, 127, 58, .40);
+}
+
+
+/* =========================================================
+   WHY JSR
+========================================================= */
+
+#why-jsr {
+
+    position: relative;
+
+    z-index: 10;
+
+    margin-top: 90px;
+
+    padding: 100px 0 120px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(255,255,255,.75),
+            transparent 32%
+        ),
+        linear-gradient(
+            135deg,
+            #faf3df 0%,
+            #f5ecd3 55%,
+            #efe3c1 100%
+        );
+}
+
+
+/* =========================================================
+   WHY HEADING
+========================================================= */
+
+.jsr-heading {
+
+    position: relative;
+
+    z-index: 5;
+
+    margin-bottom: 45px;
+}
+
+
+.jsr-heading-label {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+
+    color: #c8751c;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+
+.jsr-heading-label span {
+
+    width: 40px;
+
+    height: 3px;
+
+    display: inline-block;
+
+    border-radius: 99px;
+
+    background: #d2781d;
+}
+
+
+.jsr-heading h2 {
+
+    margin: 0;
+
+    color: #191919;
+
+    font-size: clamp(38px, 4vw, 55px);
+
+    line-height: 1.08;
+
+    font-weight: 800;
+
+    letter-spacing: -1.5px;
+}
+
+
+.jsr-heading h2 em {
+
+    color: #d2781d;
+
+    font-style: italic;
+}
+
+
+.jsr-heading p {
+
+    max-width: 900px;
+
+    margin: 18px 0 0;
+
+    color: #303030;
+
+    font-size: 16px;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   QUALITY CARD - DENGAN ANIMASI SCROLL (ACTIVE CLASS)
+========================================================= */
+
+.jsr-quality-card {
+
+    position: relative;
+
+    height: 100%;
+
+    min-height: 310px;
+
+    padding: 32px;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid rgba(255,255,255,.95);
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 12px 32px rgba(80,60,25,.09);
+
+    /* --- ANIMASI SCROLL --- */
+    opacity: 0;
+    transform: translateY(40px);
+
+    transition:
+        opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+        transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+        box-shadow .45s ease,
+        border-color .45s ease;
+}
+
+
+/* Saat card terlihat (class .active ditambahkan oleh JS) */
+.jsr-quality-card.active {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+
+.jsr-quality-card:hover {
+
+    transform: translateY(-10px);
+
+    border-color:
+        rgba(210,120,29,.35);
+
+    box-shadow:
+        0 25px 50px rgba(80,60,25,.15);
+}
+
+
+/* =========================================================
+   CARD NUMBER
+========================================================= */
+
+.jsr-card-number {
+
+    position: absolute;
+
+    top: 20px;
+
+    right: 25px;
+
+    color:
+        rgba(210,120,29,.18);
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.jsr-card-icon {
+
+    width: 58px;
+
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    border-radius: 18px;
+
+    background: #fff3d8;
+
+    color: #d2781d;
+
+    font-size: 28px;
+
+    transition: .4s ease;
+}
+
+
+.jsr-quality-card:hover .jsr-card-icon {
+
+    transform:
+        translateY(-3px)
+        rotate(-5deg)
+        scale(1.08);
+
+    background: #ffe7b2;
+}
+
+
+/* =========================================================
+   STAT
+========================================================= */
+
+.jsr-stat {
+
+    color: #d2781d;
+
+    font-size: clamp(42px, 4vw, 53px);
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: -2px;
+
+    margin-bottom: 10px;
+}
+
+
+/* =========================================================
+   BADGE
+========================================================= */
+
+.jsr-badge {
+
+    display: inline-block;
+
+    margin-bottom: 15px;
+
+    padding: 5px 10px;
+
+    border-radius: 50px;
+
+    background: #fff1d2;
+
+    color: #7b4c14;
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   CARD TITLE
+========================================================= */
+
+.jsr-quality-card h3 {
+
+    position: relative;
+
+    z-index: 2;
+
+    margin: 0 0 14px;
+
+    color: #191919;
+
+    font-size: 23px;
+
+    line-height: 1.3;
+
+    font-weight: 750;
+}
+
+
+/* =========================================================
+   CARD DESCRIPTION
+========================================================= */
+
+.jsr-quality-card p {
+
+    position: relative;
+
+    z-index: 2;
+
+    margin: 0;
+
+    color: #292929;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   CARD ACCENT
+========================================================= */
+
+.jsr-card-line {
+
+    position: absolute;
+
+    left: 32px;
+
+    bottom: 22px;
+
+    width: 0;
+
+    height: 3px;
+
+    border-radius: 99px;
+
+    background: #d2781d;
+
+    transition:
+        width .45s ease;
+}
+
+
+.jsr-quality-card:hover .jsr-card-line {
+
+    width: 55px;
+}
+
+
+/* =========================================================
+   HONEYCOMB
+========================================================= */
+
+.jsr-honeycomb {
+
+    position: absolute;
+
+    width: 250px;
+
+    height: 300px;
+
+    z-index: 1;
+
+    pointer-events: none;
+
+    opacity: .55;
+}
+
+
+.jsr-honeycomb-top {
+
+    top: 20px;
+
+    right: -40px;
+}
+
+
+.jsr-honeycomb-bottom {
+
+    bottom: 0;
+
+    left: -60px;
+
+    transform: rotate(180deg);
+}
+
+
+.jsr-honeycomb span {
+
+    position: absolute;
+
+    width: 52px;
+
+    height: 60px;
+
+    border: 1.5px solid
+        rgba(224,176,67,.45);
+
+    clip-path: polygon(
+        25% 0%,
+        75% 0%,
+        100% 25%,
+        100% 75%,
+        75% 100%,
+        25% 100%,
+        0% 75%,
+        0% 25%
+    );
+
+    animation:
+        jsrHoneyFloat 5s ease-in-out infinite;
+}
+
+
+.jsr-honeycomb span:nth-child(1) {
+
+    top: 0;
+
+    left: 75px;
+}
+
+
+.jsr-honeycomb span:nth-child(2) {
+
+    top: 35px;
+
+    left: 25px;
+}
+
+
+.jsr-honeycomb span:nth-child(3) {
+
+    top: 35px;
+
+    left: 125px;
+}
+
+
+.jsr-honeycomb span:nth-child(4) {
+
+    top: 70px;
+
+    left: 75px;
+}
+
+
+.jsr-honeycomb span:nth-child(5) {
+
+    top: 105px;
+
+    left: 25px;
+}
+
+
+.jsr-honeycomb span:nth-child(6) {
+
+    top: 105px;
+
+    left: 125px;
+}
+
+
+@keyframes jsrHoneyFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+}
+
+
+/* =========================================================
+   FOOTER - STYLING UNTUK KOLOM SEJAJAR
+========================================================= */
+
+.footer-area {
+
+    position: relative;
+
+    z-index: 20;
+
+    padding-top: 0;
+
+    background: #211d17;
+
+    color: rgba(255,255,255,.72);
+}
+
+
+.footer-area .footer_social {
+
+    padding: 38px 0 28px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.10);
+}
+
+
+.footer-area .footer_social ul {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin: 0;
+
+    padding: 0;
+
+    list-style: none;
+}
+
+
+.footer-area .footer_social ul li {
+
+    margin: 0 !important;
+}
+
+
+.footer-area .footer_social ul li a {
+
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border:
+        1px solid rgba(255,255,255,.16);
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    background:
+        rgba(255,255,255,.05);
+
+    text-decoration: none;
+
+    transition: .25s ease;
+}
+
+
+.footer-area .footer_social ul li a:hover {
+
+    color: #ffffff;
+
+    background: #d9a441;
+
+    border-color: #d9a441;
+
+    transform:
+        translateY(-3px);
+}
+
+
+.footer-area .footer-padding {
+
+    padding: 58px 0 35px;
+}
+
+
+.footer-area .single_footer {
+
+    margin-bottom: 28px;
+}
+
+
+.footer-area .single_footer h4 {
+
+    position: relative;
+
+    margin: 0 0 20px;
+
+    padding-bottom: 12px;
+
+    color: #ffffff;
+
+    font-size: 17px;
+
+    font-weight: 700;
+}
+
+
+.footer-area .single_footer h4::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    bottom: 0;
+
+    width: 38px;
+
+    height: 3px;
+
+    border-radius: 99px;
+
+    background: #d9a441;
+}
+
+
+.footer-area .footer_contact ul {
+
+    margin: 0;
+
+    padding: 0;
+
+    list-style: none;
+}
+
+
+.footer-area .footer_contact li {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    margin: 0 0 13px;
+
+    color: rgba(255,255,255,.68);
+
+    line-height: 1.65;
+}
+
+
+.footer-area .footer_contact li > i {
+
+    flex: 0 0 18px;
+
+    margin-top: 4px;
+
+    color: #f4d98d;
+
+    text-align: center;
+}
+
+
+.footer-area .footer_contact a {
+
+    color: rgba(255,255,255,.68);
+
+    text-decoration: none;
+
+    transition: .2s ease;
+}
+
+
+.footer-area .footer_contact a:hover {
+
+    color: #f4d98d;
+
+    padding-left: 4px;
+}
+
+
+.footer-area .footer_copyright {
+
+    margin: 0;
+
+    padding: 23px 0;
+
+    border-top:
+        1px solid rgba(255,255,255,.10);
+
+    color:
+        rgba(255,255,255,.48);
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   TAMBAHAN UNTUK LOGO, SOCIAL MEDIA, DAN TOMBOL WHATSAPP DI FOOTER
+   DENGAN PENYESUAIAN AGAR KOLOM SEJAJAR
+========================================================= */
+
+.footer-logo {
+    max-width: 80px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.footer-social-inline {
+    margin-top: 15px;
+}
+
+.footer-social-inline .social-label {
+    display: block;
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.footer-social-inline .social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 15px;
+    margin-right: 6px;
+    transition: 0.3s ease;
+    text-decoration: none;
+}
+
+.footer-social-inline .social-icon:hover {
+    background: #d9a441;
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+/* Tombol WhatsApp */
+.btn-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    /* background: #25D366; */
+    background: #c27f3a;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    /* box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); */
+    white-space: nowrap; 
+}
+
+.btn-wa:hover {
+    /* background: #1da851; */
+    background: #2f2820;
+    color: #ffffff;
+    transform: translateY(-3px);
+    /* box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4); */
+}
+
+.btn-wa i {
+    font-size: 20px;
+}
+
+/* =========================================================
+PERBAIKAN TOMBOL WHATSAPP
+========================================================= */
+.footer-area .footer_contact .btn-wa {
+    color: #ffffff !important;
+}
+
+.footer-area .footer_contact .btn-wa:hover {
+    color: #ffffff !important;
+}
+
+.btn-wa i.fa-whatsapp {
+    font-family: 'FontAwesome' !important;
+    font-size: 20px !important;
+    color: #ffffff !important;
+    display: inline-block !important;
+    line-height: 1 !important;
+}
+
+/* === PENYESUAIAN AGAR SEMUA KOLOM SEJAJAR === */
+.footer-area .row.footer-padding {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch; /* semua kolom setinggi konten tertinggi */
+}
+
+.footer-area .single_footer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-area .single_footer .footer_contact {
+    flex: 1; /* biarkan konten mengisi sisa ruang */
+}
+
+/* Pastikan daftar di semua kolom rata kiri dan rapi */
+.footer-area .footer_contact ul {
+    padding-left: 0;
+}
+
+.footer-area .footer_contact ul li {
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+.footer-area .footer_contact ul li a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: 0.3s ease;
+    font-size: 14px;
+}
+
+.footer-area .footer_contact ul li a:hover {
+    color: #f4d98d;
+    padding-left: 4px;
+}
+
+/* === PERBAIKAN UNTUK KOLOM AGAR RATA KIRI === */
+.footer-area .single_footer h4,
+.footer-area .single_footer p,
+.footer-area .single_footer .footer_contact ul,
+.footer-area .single_footer .footer-social-inline {
+    text-align: left;
+}
+
+/* Pastikan kolom pertama (logo) juga rata kiri */
+.footer-area .single_footer .footer-logo {
+    display: block;
+}
+
+/* Tombol WhatsApp tidak melebar */
+.footer-area .single_footer .btn-wa {
+    display: inline-flex;
+}
+
+/* Perbaikan tombol WhatsApp - warna teks putih */
+.footer-area .footer_contact .btn-wa {
+    color: #ffffff !important;
+}
+
+.footer-area .footer_contact .btn-wa:hover {
+    color: #ffffff !important;
+}
+
+/* PAKSA IKON WHATSAPP TAMPIL */
+.btn-wa i.fa-whatsapp {
+    font-family: 'FontAwesome' !important;
+    font-size: 20px !important;
+    color: #ffffff !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: auto !important;
+    height: auto !important;
+    line-height: 1 !important;
+}
+
+
+/* =========================================================
+   MOBILE MENU BUTTON - POJOK KANAN ATAS
+========================================================= */
+
+.site-menu-toggle {
+    display: block;
+    text-align: right;
+    padding: 5px 0;
+    color: #333;
+    font-size: 28px;
+    line-height: 1;
+    text-decoration: none;
+}
+
+.site-menu-toggle:hover {
+    color: #d9a441;
+}
+
+@media (max-width: 991.98px) {
+    .site-navbar .container .row {
+        position: relative;
+    }
+    .site-navbar .col-6.d-inline-block {
+        display: flex !important;
+        justify-content: flex-end;
+        align-items: center;
+    }
+    .site-menu-toggle {
+        margin-right: 0;
+        padding-right: 5px;
+    }
+}
+
+
+/* =========================================================
+   LANGUAGE FLAG (IMG) - FIX supaya bendera tidak jadi teks "ID"/"GB"
+   dan sejajar (vertically aligned) dengan menu lainnya
+========================================================= */
+
+.site-menu .language-menu {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.language-toggle {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    vertical-align: middle;
+    line-height: normal;
+}
+
+.language-toggle .language-flag,
+.language-option img {
+    display: block;
+    width: 22px;
+    height: 15px;
+    object-fit: cover;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.25);
+    vertical-align: middle;
+}
+
+.language-menu .dropdown {
+    min-width: 46px;
+}
+
+.language-option {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Highlight aktif di dropdown --- */
+.language-option.active {
+    background: rgba(217, 164, 65, 0.25) !important;
+    border-radius: 4px;
+}
+.language-option.active img {
+    box-shadow: 0 0 0 2px #d9a441 !important;
+}
+
+
+/* =========================================================
+   TESTIMONIAL SECTION
+========================================================= */
+
+.testimonial {
+    position: relative;
+    padding: 90px 0 100px;
+    background: #fffaf0;
+    overflow: hidden;
+}
+
+/* HEADING */
+.testimonial h4.text-uppercase {
+    color: #d2781d !important;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.testimonial h1 {
+    color: #211d17;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+/* CARD */
+.testimonial .testimonial-item {
+    height: 100%;
+    margin: 10px;
+    padding: 35px 30px !important;
+
+    background: #ffffff;
+
+    border: 1px solid rgba(210, 120, 29, .15);
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 12px 35px rgba(80, 60, 25, .09);
+
+    transition:
+        transform .35s ease,
+        box-shadow .35s ease;
+}
+
+.testimonial .testimonial-item:hover {
+    transform: translateY(-7px);
+
+    box-shadow:
+        0 20px 45px rgba(80, 60, 25, .14);
+}
+
+/* TEXT */
+.testimonial .testimonial-item > p:first-child {
+    min-height: 90px;
+
+    color: #625b50;
+
+    font-size: 15px;
+
+    line-height: 1.8;
+}
+
+/* IMAGE */
+.testimonial .testimonial-item img {
+    width: 100px !important;
+    height: 100px !important;
+
+    object-fit: cover;
+
+    border: 4px solid #d9a441 !important;
+
+    border-radius: 50% !important;
+}
+
+/* NAME */
+.testimonial .testimonial-item h4 {
+    margin-bottom: 6px;
+
+    color: #211d17 !important;
+
+    font-size: 20px;
+
+    font-weight: 800;
+}
+
+/* STAR */
+.testimonial .testimonial-item .stars {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+
+    color: #d9a441;
+
+    font-size: 14px;
+}
+
+/* OWL NAV */
+.testimonial .owl-nav .owl-prev {
+    position: absolute;
+
+    top: -58px;
+    right: 0;
+
+    background: #d2781d;
+
+    color: #ffffff;
+
+    padding: 5px 30px;
+
+    border-radius: 30px;
+
+    transition: .5s;
+}
+
+.testimonial .owl-nav .owl-prev:hover {
+    background: #a85c13;
+
+    color: #ffffff;
+}
+
+
+.testimonial .owl-nav .owl-next {
+    position: absolute;
+
+    top: -58px;
+    right: 88px;
+
+    background: #d2781d;
+
+    color: #ffffff;
+
+    padding: 5px 30px;
+
+    border-radius: 30px;
+
+    transition: .5s;
+}
+
+.testimonial .owl-nav .owl-next:hover {
+    background: #a85c13;
+
+    color: #ffffff;
+}
+
+/* DOTS */
+.testimonial-carousel .owl-dots {
+    display: flex;
+
+    justify-content: center;
+
+    margin-left: 20px;
+
+    margin-top: 30px;
+}
+
+
+.testimonial-carousel .owl-dots .owl-dot {
+    width: 12px;
+    height: 12px;
+
+    padding: 0;
+
+    margin-right: 10px;
+
+    border: 1px solid #d9a441;
+
+    border-radius: 50%;
+
+    background: #d9a441;
+
+    transition: .5s;
+}
+
+
+.testimonial-carousel .owl-dots .owl-dot.active {
+    width: 28px;
+
+    height: 12px;
+
+    border: 1px solid #d2781d;
+
+    border-radius: 20px;
+
+    background: #d2781d !important;
+}
+
+/* DESKTOP SPACING */
+@media (min-width: 992px) {
+    .testimonial .testimonial-item {
+        margin: 15px;
+    }
+    .testimonial .container .row:first-child {
+        margin-bottom: 40px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+/* =========================================================
+   MOBILE (≤ 767px) – dari kode asli
+========================================================= */
+
+@media (max-width: 767px) {
+
+    #home {
+
+        min-height: 560px;
+    }
+
+
+    #home .hero-content {
+
+        padding:
+            70px 18px 25px;
+    }
+
+
+    #home .hero-text h2 {
+
+        font-size: 38px;
+    }
+
+
+    #home .hero-text p {
+
+        font-size: 15px;
+
+        line-height: 1.65;
+    }
+
+
+    /* FEATURED SERVICES MOBILE */
+    #featured-services {
+        padding: 60px 0 50px;
+    }
+    #featured-services .fs-heading {
+        margin-bottom: 40px;
+    }
+    #featured-services .service-item {
+        max-width: 210px;
+        padding: 2.8rem 1.1rem 2rem;
+    }
+    #featured-services .service-item .icon {
+        width: 68px;
+        height: 68px;
+    }
+    #featured-services .service-item .icon svg {
+        width: 30px;
+        height: 30px;
+    }
+    #featured-services .service-item h4 {
+        font-size: 1rem;
+    }
+    #featured-services .service-item p {
+        font-size: .8rem;
+    }
+
+
+    /* ABOUT */
+
+    #about-jsr {
+
+        min-height: 560px;
+
+        background-attachment: scroll;
+    }
+
+
+    #about-jsr .about-content {
+
+        padding:
+            80px 20px;
+    }
+
+
+    #about-jsr .about-content h2 {
+
+        font-size: 36px;
+    }
+
+
+    #about-jsr .about-content p {
+
+        font-size: 14px;
+
+        line-height: 1.7;
+    }
+
+
+    /* PRODUCT */
+
+    .product-slide {
+
+        min-height: auto;
+
+        padding:
+            65px 25px 75px;
+
+        flex-direction: column;
+
+        gap: 25px;
+
+        text-align: center;
+    }
+
+
+    .product-image-wrapper {
+
+        width: 100%;
+
+        min-height: 350px;
+
+        max-height: 400px;
+    }
+
+
+    .product-image {
+
+        max-width: 330px;
+
+        max-height: 370px;
+    }
+
+
+    .product-info {
+
+        width: 100%;
+
+        max-width: 600px;
+    }
+
+
+    .product-label {
+
+        font-size: 10px;
+    }
+
+
+    .product-info h2 {
+
+        font-size: 40px;
+    }
+
+
+    .product-info p {
+
+        margin:
+            0 auto 25px;
+
+        font-size: 14px;
+    }
+
+
+    .product-info .btn {
+
+        min-height: 46px;
+
+        padding:
+            11px 24px;
+    }
+
+
+    /* WHY */
+
+    #why-jsr {
+
+        margin-top: 60px;
+
+        padding:
+            70px 0 80px;
+    }
+
+
+    .jsr-heading {
+
+        margin-bottom: 32px;
+    }
+
+
+    .jsr-heading h2 {
+
+        font-size: 34px;
+
+        letter-spacing: -1px;
+    }
+
+
+    .jsr-heading p {
+
+        font-size: 14px;
+
+        line-height: 1.65;
+    }
+
+
+    .jsr-quality-card {
+
+        min-height: auto;
+
+        padding:
+            27px 24px;
+
+        border-radius: 20px;
+    }
+
+
+    .jsr-quality-card h3 {
+
+        font-size: 21px;
+    }
+
+
+    .jsr-quality-card p {
+
+        font-size: 14px;
+    }
+
+
+    .jsr-stat {
+
+        font-size: 43px;
+    }
+
+
+    .jsr-honeycomb-top {
+
+        right: -150px;
+
+        transform: scale(.7);
+
+        opacity: .25;
+    }
+
+
+    .jsr-honeycomb-bottom {
+
+        left: -150px;
+
+        transform:
+            rotate(180deg)
+            scale(.7);
+
+        opacity: .20;
+    }
+
+
+    /* TESTIMONIAL MOBILE */
+    .testimonial {
+        padding: 70px 0 80px;
+    }
+
+    .testimonial .testimonial-item {
+        margin: 5px;
+        padding: 28px 22px !important;
+    }
+
+    .testimonial .testimonial-item > p:first-child {
+        min-height: auto;
+        font-size: 14px;
+    }
+
+    .testimonial .owl-nav .owl-prev,
+    .testimonial .owl-nav .owl-next {
+        top: -30px;
+    }
+
+
+    /* FOOTER */
+
+    .footer-area .footer_social {
+
+        padding:
+            30px 0 22px;
+    }
+
+
+    .footer-area .footer_social ul {
+
+        gap: 7px;
+    }
+
+
+    .footer-area .footer_social ul li a {
+
+        width: 38px;
+
+        height: 38px;
+    }
+
+
+    .footer-area .footer-padding {
+
+        padding:
+            40px 15px 18px;
+    }
+
+    /* FOOTER MOBILE - logo & social */
+    .footer-logo {
+        max-width: 90px;
+    }
+    .footer-social-inline .social-label {
+        font-size: 12px;
+    }
+    .btn-wa {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+    .btn-wa i {
+        font-size: 16px;
+    }
+    /* Pada mobile, kolom akan bertumpuk, biarkan default Bootstrap */
+
+}
+
+
+/* =========================================================
+   TABLET (≤ 991px) – PERBAIKAN PARALLAX UNTUK iPAD
+========================================================= */
+
+@media (max-width: 991px) {
+
+    #about-jsr {
+        background-attachment: scroll !important;
+        background-position: center center !important;
+        min-height: 480px;
+    }
+
+    /* Testimonial tablet */
+    .testimonial .owl-nav .owl-prev,
+    .testimonial .owl-nav .owl-next {
+        top: -30px;
+    }
+
+}
+
+
+/* =========================================================
+   PENYESUAIAN 6 CARD PER BARIS (Desktop)
+========================================================= */
+@media (min-width: 992px) {
+    /* Kecilkan ukuran card secara keseluruhan */
+    .jsr-quality-card {
+        min-height: 220px !important;
+        padding: 18px 14px !important;
+    }
+
+    /* Kecilkan Judul */
+    .jsr-quality-card h3 {
+        font-size: 16px !important;
+        margin-bottom: 8px;
+        line-height: 1.2;
+    }
+
+    /* Kecilkan Deskripsi */
+    .jsr-quality-card p {
+        font-size: 12px !important;
+        line-height: 1.5 !important;
+        margin: 0;
+    }
+
+    /* Kecilkan Angka Statistik (6,78 / 39,17 dll) */
+    .jsr-stat {
+        font-size: 28px !important;
+        line-height: 1;
+        margin-bottom: 6px;
+        letter-spacing: -1px;
+    }
+
+    /* Kecilkan Badge (Standar SNI) */
+    .jsr-badge {
+        font-size: 7px !important;
+        padding: 3px 6px !important;
+        margin-bottom: 8px;
+    }
+
+    /* Kecilkan Icon */
+    .jsr-card-icon {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 16px !important;
+        margin-bottom: 10px;
+        border-radius: 12px;
+    }
+
+    /* Kecilkan Nomor (01, 02...) */
+    .jsr-card-number {
+        font-size: 10px !important;
+        top: 12px !important;
+        right: 14px !important;
+    }
+
+    /* Sembunyikan garis aksen di bawah card agar tidak sesak */
+    .jsr-card-line {
+        display: none !important;
+    }
+}
+
+
+/* =========================================================
+   NAVBAR STICKY - LOGO GANTI TEKS "MADUJSR"
+   Saat discroll, logo gambar hilang dan muncul tulisan MADUJSR
+   dengan warna #9f250d
+========================================================= */
+
+/* Background navbar saat sticky */
+.site-navbar.sticky {
+    /* background: #ffffff !important; */
+    background: #F0E7CE !important;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.10);
+    padding: 8px 0;
+}
+
+/* Sembunyikan gambar logo saat sticky */
+.site-navbar.sticky .site-logo img {
+    display: none !important;
+}
+
+/* Tampilkan teks "MADUJSR" sebagai pengganti logo saat sticky */
+.site-navbar.sticky .site-logo a::before {
+    content: "MADUJSR";
+    display: inline-block;
+    font-family: 'Exo', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: #9f250d;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+/* Pastikan logo tetap rapi saat sticky */
+.site-navbar.sticky .site-logo {
+    /* line-height: 1; */
+    padding: 0;
+}
+
+.site-navbar.sticky .site-logo a {
+    display: inline-block;
+    padding: 5px 0;
+    text-decoration: none;
+}
+
+/* Warna menu link saat sticky - semua menu jadi #9f250d */
+.site-navbar.sticky .site-menu > li > a {
+    color: #9f250d !important;
+}
+
+/* Hover menu link saat sticky */
+.site-navbar.sticky .site-menu > li > a:hover {
+    color: #c0392b !important;
+}
+
+/* Menu aktif saat sticky */
+.site-navbar.sticky .site-menu > li.active > a {
+    color: #9f250d !important;
+}
+
+/* Menu dropdown saat sticky */
+.site-navbar.sticky .menu_dropdown ul li ul.sub-menu li a {
+    color: #9f250d !important;
+}
+
+.site-navbar.sticky .menu_dropdown ul li ul.sub-menu li a:hover {
+    color: #c0392b !important;
+}
+
+
+/* =========================================================
+   SELECTION - WARNA TEKS MENJADI MADU
+========================================================= */
+::selection {
+    color: #d9a441 !important;      /* Warna madu emas */
+    background: rgba(30, 20, 10, 0.15) !important; /* Latar tipis gelap agar kontras */
+}
+
+/* Untuk Firefox */
+::-moz-selection {
+    color: #d9a441 !important;
+    background: rgba(30, 20, 10, 0.15) !important;
+}
+
+
+/* =========================================================
+   MENU AKTIF - WARNA MADU
+========================================================= */
+
+/* Menu aktif (current page) */
+.site-navbar .site-menu > li.active > a,
+.site-navbar .site-menu > li.active > a:hover {
+    color: #d9a441 !important;
+}
+
+/* Menu saat di-hover */
+.site-navbar .site-menu > li > a:hover {
+    color: #d9a441 !important;
+}
+
+/* Menu dropdown aktif */
+.site-navbar .site-menu > li.has-children.active > a {
+    color: #d9a441 !important;
+}
+
+/* Sub menu dropdown aktif */
+.site-navbar .site-menu .dropdown li.active > a {
+    color: #d9a441 !important;
+    background: rgba(217, 164, 65, 0.08) !important;
+}
+
+
+/* =========================================================
+   TEXT MADU - WARNA EMAS
+========================================================= */
+body #about-jsr .about-content h2 em.text-madu {
+    color: #f0b44d !important;
+    font-style: italic;
+}

@@ -1,0 +1,7 @@
+DirectoryIndex index.php
+
+RewriteEngine On
+
+# Hilangkan index.php dari URL
+RewriteCond %{THE_REQUEST} \s/+madujsr01/index\.php[\s?] [NC]
+RewriteRule ^index\.php$ /madujsr01/ [R=301,L]
