@@ -1187,6 +1187,10 @@ $products = [
             box-shadow: 0 0 0 1px rgba(255,255,255,.25);
             vertical-align: middle;
         }
+        .language-toggle .language-flag {
+            width: 26px;
+            height: 18px;
+        }
         .language-menu .dropdown { min-width: 46px; }
         .language-option {
             display: flex !important;
@@ -1900,7 +1904,7 @@ $products = [
             <div class="row align-items-center">
                 <div class="col-6 col-xl-2">
                     <h1 class="mb-0 site-logo">
-                        <a href="/madujsr01">
+                        <a href="/">
                             <img src="assets/img/logo1.png" alt="MaduJSR" class="logo">
                         </a>
                     </h1>
@@ -1922,7 +1926,7 @@ $products = [
                             </li>
                             <li class="has-children language-menu">
                                 <a href="javascript:void(0)" class="nav-link language-toggle" aria-label="Pilih Bahasa">
-                                    <img src="assets/img/flag/translate.png" alt="ID" class="language-flag">
+                                    <img src="assets/img/flag/id.png" alt="ID" class="language-flag">
                                 </a>
                                 <ul class="dropdown">
                                     <li>
@@ -2590,31 +2594,31 @@ $products = [
     </script>
 
     <!-- ============================================================
-         LANGUAGE SWITCHER
+         LANGUAGE SWITCHER (tombol menampilkan bendera bahasa aktif)
     ============================================================ -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const languageOptions = document.querySelectorAll('.language-option');
-            const languageFlag = document.querySelector('.language-toggle .language-flag');
 
             function changeLanguage(lang) {
                 document.querySelectorAll('[data-id][data-en]').forEach(function (el) {
                     el.textContent = (lang === 'en') ? el.getAttribute('data-en') : el.getAttribute('data-id');
                 });
+
                 languageOptions.forEach(function (opt) {
-                    opt.classList.remove('active');
-                    if (opt.getAttribute('data-lang') === lang) {
-                        opt.classList.add('active');
-                    }
+                    opt.classList.toggle('active', opt.getAttribute('data-lang') === lang);
                 });
-                if (languageFlag) {
-                    var flagSrc = (lang === 'en') ? 'assets/img/flag/gb.png' : 'assets/img/flag/id.png';
-                    var cacheBuster = '?v=' + new Date().getTime();
-                    languageFlag.src = flagSrc + cacheBuster;
-                    languageFlag.alt = (lang === 'en') ? 'EN' : 'ID';
-                }
+
+                // Ganti bendera di tombol (termasuk salinan menu mobile)
+                var flagSrc = (lang === 'en') ? 'assets/img/flag/gb.png' : 'assets/img/flag/id.png';
+                document.querySelectorAll('.language-toggle .language-flag').forEach(function (img) {
+                    img.src = flagSrc;
+                    img.alt = (lang === 'en') ? 'EN' : 'ID';
+                });
+
                 localStorage.setItem('language', lang);
                 document.documentElement.lang = lang;
+
                 var dropdown = document.querySelector('.language-menu .dropdown');
                 if (dropdown) {
                     dropdown.style.display = 'none';
@@ -2622,26 +2626,24 @@ $products = [
                 }
             }
 
-            languageOptions.forEach(function (option) {
-                option.addEventListener('click', function (e) {
+            // Event delegation supaya klik di menu mobile (hasil clone) juga bekerja
+            document.addEventListener('click', function (e) {
+                var option = e.target.closest('.language-option');
+                if (option) {
                     e.preventDefault();
-                    var lang = this.getAttribute('data-lang');
-                    changeLanguage(lang);
-                });
-            });
-
-            var toggleBtn = document.querySelector('.language-toggle');
-            if (toggleBtn) {
-                toggleBtn.addEventListener('click', function (e) {
+                    changeLanguage(option.getAttribute('data-lang'));
+                    return;
+                }
+                var toggle = e.target.closest('.language-toggle');
+                if (toggle) {
                     e.preventDefault();
                     var current = localStorage.getItem('language') || 'id';
-                    var next = (current === 'id') ? 'en' : 'id';
-                    changeLanguage(next);
-                });
-            }
+                    changeLanguage(current === 'id' ? 'en' : 'id');
+                }
+            });
 
-            var saved = localStorage.getItem('language') || 'id';
-            changeLanguage(saved);
+            // Selalu mulai dari Bahasa Indonesia setiap halaman dibuka
+            changeLanguage('id');
         });
     </script>
 
