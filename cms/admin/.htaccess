@@ -1,0 +1,18 @@
+# URL tanpa ekstensi: /cms/admin/login <-> login.php
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # 1) Alamat lama "xxx.php" (hanya GET) dialihkan ke versi bersih "xxx".
+  #    Alamat tujuan dibangun dari alamat yang diminta browser, jadi tidak
+  #    bergantung pada lokasi folder situs (aman untuk subfolder / domain apa pun).
+  RewriteCond %{THE_REQUEST} ^GET\s+(\S*?)/index\.php(?:\?\S*)?\s
+  RewriteRule ^ %{REQUEST_SCHEME}://%{HTTP_HOST}%1/ [R=301,L,NE]
+  RewriteCond %{THE_REQUEST} ^GET\s+(\S*?)/([A-Za-z0-9_-]+)\.php(?:\?\S*)?\s
+  RewriteRule ^ %{REQUEST_SCHEME}://%{HTTP_HOST}%1/%2 [R=301,L,NE]
+
+  # 2) Alamat bersih "xxx" dilayani oleh xxx.php (rewrite internal)
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME}.php -f
+  RewriteRule ^([A-Za-z0-9_-]+)$ $1.php [L]
+</IfModule>

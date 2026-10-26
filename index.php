@@ -1,245 +1,25 @@
 <?php
 	/* =========================================================
-	   KONFIGURASI
+	   KONTEN DIKELOLA OLEH CMS (lihat folder /cms)
+	   Panel admin: /cms/admin/
 	========================================================= */
-	$wa_number = '62XXXXXXXXXXX';
-	$wa_text   = 'Halo Madu JSR, saya ingin konsultasi';
+	require __DIR__ . '/cms/bootstrap.php';
 
-	function e($v) { return htmlspecialchars($v, ENT_QUOTES, 'UTF-8'); }
+	$wa_url = cms_wa_url();
 
-	$wa_url = 'https://api.whatsapp.com/send?phone=' . rawurlencode($wa_number) . '&text=' . rawurlencode($wa_text);
+	[$products, $details] = cms_load_products();   // produk + detail
+	$trust        = cms_load_trust();               // "Alasan Dipercaya"
+	$services     = cms_load_services();            // 4 kotak highlight
+	$advantages   = cms_load_advantages();          // kartu keunggulan
+	$testimonials = cms_load_testimonials();
+	$social = array_filter([
+		'Facebook'  => ['fa-facebook',  setting('facebook')],
+		'Instagram' => ['fa-instagram', setting('instagram')],
+		'YouTube'   => ['fa-youtube',   setting('youtube')],
+	], function ($s) { return $s[1] !== ''; });
 
-	// Daftar produk
-	$products = [
-		[
-			'img'   => 'assets/img/madu/madu jsr multiflora@4x-8.png',
-			'class' => 'product-image',
-			'alt'   => 'Madu JSR Multiflora',
-			'badge' => ['id' => 'Madu Murni', 'en' => 'Pure Honey'],
-			'name'  => ['id' => 'Madu Multiflora', 'en' => 'Multiflora Honey'],
-			'subtitle'   => ['id' => 'Aroma Bunga Beragam', 'en' => 'Diverse Floral Aroma'],
-			'price'      => '',
-			'price_note' => ['id' => '(Sekali beli)', 'en' => '(One-time)'],
-			'rating'     => '4.93',
-			'reviews'    => '547',
-			'desc'  => [
-				'id' => 'Madu murni yang berasal berbagai macam nektar bunga, dengan aroma bunga yang beraneka ragam.',
-				'en' => 'Pure honey from various flower nectars, with a diverse floral aroma.',
-			],
-			'features' => [
-				['icon' => 'fa-shield',      'label_id' => 'Daya Tahan Harian',    'label_en' => 'Superior Daily Defense'],
-				['icon' => 'fa-heart',       'label_id' => 'Kesehatan Kulit',      'label_en' => 'Wound & Skincare'],
-				['icon' => 'fa-medkit',      'label_id' => 'Anti Bakteri Alami',   'label_en' => 'Antibacterial Relief'],
-			],
-			'link'  => 'https://jsrstore.id/products/detail/madu-jsr-murni-multiflora',
-		],
-		[
-			'img'   => 'assets/img/madu/madu jsr sangket@4x-8.png',
-			'class' => 'product-image',
-			'alt'   => 'Madu JSR Sangket',
-			'badge' => ['id' => 'Uniflora', 'en' => 'Uniflora'],
-			'name'  => ['id' => 'Madu Sangket', 'en' => 'Sangket Honey'],
-			'subtitle'   => ['id' => 'Rasa Lebih Manis', 'en' => 'Sweeter Taste'],
-			'price'      => '',
-			'price_note' => ['id' => '(Sekali beli)', 'en' => '(One-time)'],
-			'rating'     => '4.90',
-			'reviews'    => '312',
-			'desc'  => [
-				'id' => 'Madu murni jenis uniflora yang berasal dari nektar bunga sangket. Rasanya yang lebih manis cocok dinikmati langsung maupun sebagai pemanis alami.',
-				'en' => 'Pure uniflora honey from sangket flower nectar. Its sweeter taste is perfect for direct consumption or as a natural sweetener.',
-			],
-			'features' => [
-				['icon' => 'fa-shield',  'label_id' => 'Daya Tahan Harian',    'label_en' => 'Superior Daily Defense'],
-				['icon' => 'fa-leaf',    'label_id' => 'Pemanis Alami',        'label_en' => 'Natural Sweetener'],
-				['icon' => 'fa-star',    'label_id' => 'Kualitas Premium',     'label_en' => 'Premium Quality'],
-			],
-			'link'  => 'https://jsrstore.id/products/detail/madu-sangket-jsr',
-		],
-		[
-			'img'   => 'assets/img/madu/madu jsr hitam4x-8 (1).png',
-			'class' => 'product-image1',
-			'alt'   => 'Madu Hitam',
-			'badge' => ['id' => 'Kaya Antioksidan', 'en' => 'Rich Antioxidant'],
-			'name'  => ['id' => 'Madu Hitam', 'en' => 'Black Honey'],
-			'subtitle'   => ['id' => 'Stamina & Pemulihan', 'en' => 'Stamina & Recovery'],
-			'price'      => '',
-			'price_note' => ['id' => '(Sekali beli)', 'en' => '(One-time)'],
-			'rating'     => '4.95',
-			'reviews'    => '428',
-			'desc'  => [
-				'id' => 'Madu murni dengan warna lebih gelap dan kandungan antioksidan yang tinggi cocok untuk membantu menjaga stamina, daya tahan tubuh, kesehatan lambung, dan mendukung pemulihan.',
-				'en' => 'Pure honey with a darker colour and high antioxidant content, suitable for maintaining stamina, immunity, stomach health, and supporting recovery.',
-			],
-			'features' => [
-				['icon' => 'fa-shield',  'label_id' => 'Stamina & Daya Tahan', 'label_en' => 'Stamina & Immunity'],
-				['icon' => 'fa-heart',   'label_id' => 'Kesehatan Lambung',    'label_en' => 'Stomach Health'],
-				['icon' => 'fa-medkit',  'label_id' => 'Mendukung Pemulihan',  'label_en' => 'Recovery Support'],
-			],
-			'link'  => 'https://jsrstore.id/products/detail/madu-hitam-manis-jsr',
-		],
-		[
-			'img'   => 'assets/img/madu/Madu Hexa RePos.png',
-			'class' => 'product-image2',
-			'alt'   => 'Madu Hexabrain',
-			'badge' => ['id' => 'Untuk Keluarga', 'en' => 'For Family'],
-			'name'  => ['id' => 'Madu Hexabrain', 'en' => 'Hexabrain Honey'],
-			'subtitle'   => ['id' => 'Rutinitas Pagi Malam', 'en' => 'Morning & Night Routine'],
-			'price'      => '',
-			'price_note' => ['id' => '(Sekali beli)', 'en' => '(One-time)'],
-			'rating'     => '4.88',
-			'reviews'    => '265',
-			'desc'  => [
-				'id' => 'Madu pilihan untuk rutinitas pagi dan malam keluarga, menemani pola hidup sehat.',
-				'en' => 'A honey companion for the family\'s morning and evening routine, supporting a healthy lifestyle.',
-			],
-			'features' => [
-				['icon' => 'fa-shield',  'label_id' => 'Daya Tahan Harian',   'label_en' => 'Daily Defense'],
-				['icon' => 'fa-heart',   'label_id' => 'Pola Hidup Sehat',    'label_en' => 'Healthy Lifestyle'],
-				['icon' => 'fa-star',    'label_id' => 'Kemasan 760 gr',      'label_en' => '760 gr Pack'],
-			],
-			'link'  => 'https://jsrstore.id/products/detail/madu-hexabrain',
-		],
-		[
-			'img'   => 'assets/img/madu/Madu Gold RePos.png',
-			'class' => 'product-image3',
-			'alt'   => 'Madu Gold JSR',
-			'badge' => ['id' => 'Premium', 'en' => 'Premium'],
-			'name'  => ['id' => 'Madu Gold JSR', 'en' => 'Gold JSR Honey'],
-			'subtitle'   => ['id' => 'Pilihan Premium', 'en' => 'Premium Choice'],
-			'price'      => '',
-			'price_note' => ['id' => '(Sekali beli)', 'en' => '(One-time)'],
-			'rating'     => '4.91',
-			'reviews'    => '198',
-			'desc'  => [
-				'id' => 'Madu pilihan premium untuk dikonsumsi sendiri maupun dijadikan hadiah istimewa.',
-				'en' => 'A premium honey for personal consumption or as a special gift.',
-			],
-			'features' => [
-				['icon' => 'fa-star',    'label_id' => 'Kualitas Premium',  'label_en' => 'Premium Quality'],
-				['icon' => 'fa-shield',  'label_id' => 'Menjaga Kebugaran', 'label_en' => 'Maintain Fitness'],
-				['icon' => 'fa-heart',   'label_id' => 'Pilihan Hadiah',    'label_en' => 'Gift Choice'],
-			],
-			'link'  => 'https://jsrstore.id/products/detail/madu-gold-jsr',
-		],
-		[
-			// MADU IMUN
-			'img'        => 'assets/img/madu/Madu Imun RePos.png',
-			'detail_img' => 'assets/img/madu/madu-imun-desktop-gabungan.jpg',
-			'class' => 'product-image4',
-			'alt'   => 'Madu Imun JSR',
-			'badge' => ['id' => 'Untuk Imunitas', 'en' => 'For Immunity'],
-			'name'  => ['id' => 'Madu Imun', 'en' => 'Immune Honey'],
-			'subtitle'   => ['id' => 'Dukung Daya Tahan', 'en' => 'Immunity Support'],
-			'price'      => '',
-			'price_note' => ['id' => '(Sekali beli)', 'en' => '(One-time)'],
-			'rating'     => '4.89',
-			'reviews'    => '356',
-			'desc'  => [
-				'id' => 'Madu untuk mendukung daya tahan tubuh, terutama saat musim pancaroba.',
-				'en' => 'Honey to support your immunity, especially during changing seasons.',
-			],
-			'features' => [
-				['icon' => 'fa-shield',  'label_id' => 'Dukung Imunitas',   'label_en' => 'Immunity Support'],
-				['icon' => 'fa-medkit',  'label_id' => 'Mudah Dikonsumsi',  'label_en' => 'Easy to Consume'],
-				['icon' => 'fa-heart',   'label_id' => 'Rutinitas Harian',  'label_en' => 'Daily Routine'],
-			],
-			'link'  => 'https://jsrstore.id/products/detail/madu-imun',
-		],
-	];
-
-	/* =========================================================
-	   DETAIL PRODUK
-	========================================================= */
-	$trust = [
-		['id' => 'Madu murni tanpa tambahan; raw honey tidak dipasteurisasi', 'en' => 'Pure honey with no additives; raw honey is not pasteurised'],
-		['id' => 'Melalui pengujian laboratorium, bebas logam berat & kloramfenikol', 'en' => 'Laboratory tested, free from heavy metals & chloramphenicol'],
-		['id' => 'Tersertifikasi halal', 'en' => 'Halal certified'],
-		['id' => 'Terdaftar resmi dengan nomor P-IRT', 'en' => 'Officially registered with a P-IRT number'],
-	];
-
-	$details = [
-		// 0 Multiflora
-		[
-			'tagline'   => ['id' => 'Aroma bunga beraneka ragam dalam satu madu.', 'en' => 'A diverse floral aroma in one honey.'],
-			'relevance' => ['id' => 'Cocok untuk keluarga yang baru mulai rutin mengonsumsi madu dan menyukai karakter rasa madu yang seimbang.', 'en' => 'Suitable for families starting a regular honey routine who enjoy a well-balanced honey flavour.'],
-			'function'  => [
-				['id' => 'Pengganti gula alami untuk teh, kopi, dan jus', 'en' => 'Natural sugar substitute for tea, coffee, and juice'],
-				['id' => 'Diminum langsung sebagai rutinitas harian', 'en' => 'Taken directly as a daily routine'],
-				['id' => 'Pelengkap roti, oatmeal, dan masakan', 'en' => 'Pairs with bread, oatmeal, and cooking'],
-			],
-			'long_desc' => [
-				'id' => "Apa itu madu multiflora?\n\nMadu multiflora adalah madu yang asal nektarnya diambil lebah dari bunga berbagai tanaman. Kaya akan manfaat meningkatkan daya tahan tubuh. Madu adalah superfood yg diciptakan Allah buat kita, ada banyak kandungan penting di sana untuk kita, seperti enzim, asam amino, vitamin dan mineral.\n\nRasulullah Shallallahu alaihi Wassalam bersabda:\n\n\"Sebaik-baik minuman ialah madu karena dia dapat mengkonsentrasikan hati dan menghilangkan dingin yang ada di dalam dada\". (HR. Dailami). Saking istimewanya, madu juga disebutkan di dalam Al-Qur'an:\n\n\"Kemudian, makanlah (wahai lebah) dari segala (macam) buah-buahan lalu tempuhlah jalan-jalan Tuhanmu yang telah dimudahkan (bagimu).\" Dari perutnya itu keluar minuman (madu) yang beraneka warnanya. Di dalamnya terdapat obat bagi manusia. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda (kebesaran Allah) bagi kaum yang berpikir.\" (QS. An-Nahl: 69)\n\nManfaat Madu Multiflora:\n1. Meningkatkan imunitas\n2. Meredakan peradangan\n3. Mengurangi kolesterol dan tekanan darah\n4. Membantu mengontrol gula darah\n5. Sebagai antibakteri yang kuat\n6. Dan banyak manfaat lainnya.\n\nCara Konsumsi:\nMadu Multiflora ini aman untuk dikonsumsi oleh orang dewasa dan juga anak-anak. Dosis untuk dewasa : 3x1sendok makan dan untuk anak 3x1 sendok teh.",
-				'en' => "What is multiflora honey?\n\nMultiflora honey is honey whose nectar is collected by bees from the flowers of various plants. It is rich in benefits for boosting the immune system. Honey is a superfood created by Allah for us, containing many important nutrients such as enzymes, amino acids, vitamins, and minerals.\n\nRasulullah Shallallahu alaihi wasallam said:\n\n\"The best of drinks is honey, for it concentrates the heart and removes the cold from the chest.\" (HR. Dailami). Such is its distinction that honey is also mentioned in the Qur'an:\n\n\"Then eat of all fruits and follow the ways of your Lord made easy for you.\" There comes forth from their bellies a drink of varying colours, wherein is healing for mankind. Indeed in that is a sign for a people who give thought. (QS. An-Nahl: 69)\n\nBenefits of Multiflora Honey:\n1. Boosts immunity\n2. Relieves inflammation\n3. Reduces cholesterol and blood pressure\n4. Helps control blood sugar\n5. Acts as a strong antibacterial\n6. And many other benefits.\n\nHow to Consume:\nMultiflora honey is safe for both adults and children. Dosage for adults: 3x1 tablespoon, and for children: 3x1 teaspoon.",
-			],
-		],
-		// 1 Sangket
-		[
-			'tagline'   => ['id' => 'Madu uniflora dengan rasa lebih manis.', 'en' => 'Uniflora honey with a sweeter taste.'],
-			'relevance' => ['id' => 'Cocok untuk Anda yang menyukai rasa madu lebih manis dan ingin satu sumber nektar dengan karakter khas.', 'en' => 'Ideal if you prefer a sweeter honey and want a single nectar source with a distinct character.'],
-			'function'  => [
-				['id' => 'Pemanis alami untuk minuman dan makanan', 'en' => 'Natural sweetener for drinks and food'],
-				['id' => 'Nikmat diminum langsung', 'en' => 'Enjoyable straight from the spoon'],
-				['id' => 'Pilihan untuk mengenal madu uniflora', 'en' => 'A great way to discover uniflora honey'],
-			],
-			'long_desc' => [
-				'id' => "Madu Murni Sangket adalah madu murni yang berasal dari satu nektar muda bunga sangket. Madu sangket adalah madu jenis uniflora, artinya nektar bahan baku lebahnya hanya berasal dari satu tanaman sangket.\n\nDiriwayatkan dari Abi Said Radhiyallahu 'Anhu:\n\n\"Sesungguhnya, seorang laki-laki datang kepada Rasulullah Shallahu 'Alaihi Wassallam., ia berkata: 'Sesungguhnya, saudaraku sakit perutnya.' Beliau bersabda: 'Berilah ia minum madu.' Ia pun pergi kemudian kembali dan berkata: 'Aku telah memberinya minum, tetapi belum berhasil.' Ia pun kembali untuk kedua kalinya lalu beliau bersabda pada yang ketiga atau keempat: 'Allah Maha benar dan perut saudaramu berdusta,' kemudian ia memberi saudaranya itu minum lalu ia sembuh.\" (HR. Bukhari dan Muslim)\n\nManfaat Madu Murni Sangket:\n1. Meningkatkan daya tahan tubuh\n2. Menjadi obat radang tenggorokan\n3. Menjadi obat demam\n4. Menjadi tempat bagi tubuh untuk mendapatkan kandungan penting seperti asam amino, enzim, dan mineral\n5. Dan banyak manfaat lainnya.\n\nCara Konsumsi:\nMadu Murni Sangket aman dikonsumsi oleh dewasa dan anak-anak. Dosis untuk dewasa : 3x1sendok makan, untuk anak 3x1 sendok teh.",
-				'en' => "Sangket Pure Honey is pure honey derived from a single nectar source — the young sangket flower. Sangket honey is a uniflora type, meaning the bees' raw nectar comes from only one plant, the sangket.\n\nNarrated from Abi Said Radhiyallahu 'Anhu:\n\n\"Verily, a man came to the Messenger of Allah (peace be upon him) and said: 'My brother has a stomach ailment.' He said: 'Give him honey to drink.' He went and returned and said: 'I have given him drink, but it did not work.' He returned for the second time, then the Prophet said on the third or fourth time: 'Allah is true, and your brother's stomach has lied,' then he gave his brother honey to drink, and he was cured.\" (HR. Bukhari and Muslim)\n\nBenefits of Sangket Pure Honey:\n1. Boosts the immune system\n2. Relieves sore throat\n3. Helps relieve fever\n4. Provides important nutrients such as amino acids, enzymes, and minerals\n5. And many other benefits.\n\nHow to Consume:\nSangket Pure Honey is safe for adults and children. Dosage for adults: 3x1 tablespoon, for children: 3x1 teaspoon.",
-			],
-		],
-		// 2 Hitam
-		[
-			'tagline'   => ['id' => 'Warna gelap, kaya antioksidan.', 'en' => 'Dark in colour, rich in antioxidants.'],
-			'relevance' => ['id' => 'Cocok untuk Anda dengan aktivitas padat yang ingin menjaga stamina, daya tahan tubuh, dan mendukung masa pemulihan.', 'en' => 'Suitable for busy people who want to maintain stamina, immunity, and support recovery.'],
-			'function'  => [
-				['id' => 'Membantu menjaga stamina', 'en' => 'Helps maintain stamina'],
-				['id' => 'Membantu menjaga daya tahan tubuh', 'en' => 'Helps maintain immunity'],
-				['id' => 'Mendukung kesehatan lambung dan pemulihan', 'en' => 'Supports stomach health and recovery'],
-			],
-			'long_desc' => [
-				'id' => "Madu hitam adalah:\n\nMadu murni pilihan dengan kadar air 18-19%, yang berasal dari berbagai sumber nectar tanaman, seperti dr pohon akasia, jambe dan tanaman hutan/perkebunan lainnya.\n\nKhasiat/manfaat madu hitam insyallah:\n- Meningkatkatkan stamina dan daya tahan Tubuh terhadap serangan berbagai penyakit, terutama usia pada usia lanjut.\n- Mempercepat pemulihan organ pasca kecelakaan, pasca jatuh dan pasca operasi.\n- Mengandung antioksidan tergolong yang terbaik di banding kebanyakan madu murni dr nectar lain, sehingga JK di minum teratur (3x2 Sd m) insyaallah efektif buat membantu penyembuhan sakit maag akut, typus, gastritis dan aneka gangguan lambung lainnya.\n- memelihara kebugaran, kesegaran dan elastisitas pada kulit.",
-				'en' => "Black honey is:\n\nA selected pure honey with a moisture content of 18-19%, sourced from various plant nectars, such as acacia trees, jambe, and other forest/plantation plants.\n\nBenefits of black honey, God willing:\n- Increases stamina and the body's immunity against various diseases, especially in the elderly.\n- Accelerates organ recovery after accidents, falls, and surgery.\n- Contains antioxidants considered among the best compared to most other pure nectars, so when consumed regularly (3x2 tablespoons) it is effective, God willing, in helping to cure acute gastritis, typhus, gastritis, and various other stomach disorders.\n- Maintains fitness, freshness, and skin elasticity.",
-			],
-		],
-		// 3 Hexabrain
-		[
-			'tagline'   => ['id' => 'Pendamping rutinitas madu untuk keluarga.', 'en' => 'A honey companion for the family routine.'],
-			'relevance' => ['id' => 'Cocok untuk orang tua yang ingin menjadikan madu bagian dari rutinitas pagi dan malam keluarga.', 'en' => 'Suitable for parents who want honey as part of the family\'s morning and evening routine.'],
-			'function'  => [
-				['id' => 'Dikonsumsi rutin pagi dan malam', 'en' => 'Taken regularly morning and night'],
-				['id' => 'Menemani pola hidup sehat keluarga', 'en' => 'Accompanies a healthy family lifestyle'],
-				['id' => 'Tersedia kemasan 760 gr', 'en' => 'Available in 760 gr pack'],
-			],
-			'long_desc' => [
-				'id' => "Madu hexabrain adalah madu yang dilengkapi dengan kandungan nutrisi khusus untuk meningkatkan kecerdasan otak. Sangat baik dikonsumsi oleh anak kecil yang otaknya sedang berkembang.\n\n\"Kemudian, makanlah (wahai lebah) dari segala (macam) buah-buahan lalu tempuhlah jalan-jalan Tuhanmu yang telah dimudahkan (bagimu).\" Dari perutnya itu keluar minuman (madu) yang beraneka warnanya. Di dalamnya terdapat obat bagi manusia. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda (kebesaran Allah) bagi kaum yang berpikir.\" (Q.S Annhl Ayat 69)\n\nManfaat madu hexabrain adalah membantu meningkatkan IQ, dan kecerdasaan otak.\n\nKomposisi : royal jelly, beepollen, propolis strain probiotik\n\nCara Konsumsi: Dosis untuk dewasa: 3x1 sendok makan dan untuk anak-anak 3x1 sendok teh.",
-				'en' => "Hexabrain honey is honey enriched with special nutrients to enhance brain intelligence. It is highly recommended for young children whose brains are still developing.\n\n\"Then eat of all fruits and follow the ways of your Lord made easy for you.\" There comes forth from their bellies a drink of varying colours, wherein is healing for mankind. Indeed in that is a sign for a people who give thought. (Q.S An-Nahl: 69)\n\nThe benefit of hexabrain honey is to help improve IQ and brain intelligence.\n\nComposition: royal jelly, bee pollen, propolis, probiotic strain\n\nHow to Consume: Dosage for adults: 3x1 tablespoon and for children 3x1 teaspoon.",
-			],
-		],
-		// 4 Gold
-		[
-			'tagline'   => ['id' => 'Pilihan premium dari JSR.', 'en' => 'The premium choice from JSR.'],
-			'relevance' => ['id' => 'Cocok untuk Anda yang mencari madu pilihan untuk dikonsumsi sendiri maupun dijadikan hadiah.', 'en' => 'Suitable if you want a premium honey for yourself or as a gift.'],
-			'function'  => [
-				['id' => 'Dikonsumsi rutin untuk menjaga kebugaran', 'en' => 'Taken regularly to maintain fitness'],
-				['id' => 'Tersedia dalam dua ukuran kemasan', 'en' => 'Available in two pack sizes'],
-				['id' => 'Pilihan hadiah untuk keluarga dan kerabat', 'en' => 'A gift choice for family and friends'],
-			],
-			'long_desc' => [
-				'id' => "Madu Gold adalah varian madu JSR dengan kualitas terbaik. Karena mengandung lebih banyak royal jelly, bee polen dan propolis. Sangat baik dikonsumsi oleh orang tua dan mereka yang ingin menjalankan program hamil.\n\n\"Kemudian, makanlah (wahai lebah) dari segala (macam) buah-buahan lalu tempuhlah jalan-jalan Tuhanmu yang telah dimudahkan (bagimu).\" Dari perutnya itu keluar minuman (madu) yang beraneka warnanya. Di dalamnya terdapat obat bagi manusia. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda (kebesaran Allah) bagi kaum yang berpikir.\" (Q.S Annhl Ayat 69)\n\nKomposisi: Madu, Royal Jelly, Propolis\n\nManfaat:\n1. Sebagai multivitamin dan antioksidan\n2. Sebagai anti infeksi dan anti alergi\n3. Meningkatkan daya tahan tubuh terhadap penyakit\n4. Memperbaiki jaringan tubuh\n5. Mengatasi permasahanan yang bersifat hormonal\n6. Mencegah penuaan dini\n7. Memperbaiki kesuburan reproduksi wanita dan pria\n8. Dan banyak manfaat lainnya.\n\nCara Konsumsi:\n- 1 sendok makan 2 x sehari. Pada pagi hari sebelum makan dan malam hari sebelum tidur.\n- Bisa dicampur dengan segelas air hangat atau air dingin\n- Diaduk dulu sebelum dikonsumsi",
-				'en' => "Gold Honey is the premium variant of JSR honey. It contains more royal jelly, bee pollen, and propolis. It is highly recommended for the elderly and those planning a pregnancy program.\n\n\"Then eat of all fruits and follow the ways of your Lord made easy for you.\" There comes forth from their bellies a drink of varying colours, wherein is healing for mankind. Indeed in that is a sign for a people who give thought. (Q.S An-Nahl: 69)\n\nComposition: Honey, Royal Jelly, Propolis\n\nBenefits:\n1. As a multivitamin and antioxidant\n2. As an anti-infection and anti-allergy agent\n3. Increases the body's immunity against diseases\n4. Repairs body tissues\n5. Addresses hormonal-related issues\n6. Prevents premature ageing\n7. Improves reproductive fertility in women and men\n8. And many other benefits.\n\nHow to Consume:\n- 1 tablespoon twice a day. In the morning before eating and at night before sleeping.\n- Can be mixed with a glass of warm or cold water\n- Stir well before consuming",
-			],
-		],
-		// 5 Imun
-		[
-			'tagline'   => ['id' => 'Madu untuk mendukung daya tahan tubuh.', 'en' => 'Honey to support your immunity.'],
-			'relevance' => ['id' => 'Cocok untuk keluarga yang ingin lebih peduli pada daya tahan tubuh, terutama saat musim pancaroba.', 'en' => 'Suitable for families who care about their immunity, especially during changing seasons.'],
-			'function'  => [
-				['id' => 'Membantu menjaga daya tahan tubuh', 'en' => 'Helps maintain immunity'],
-				['id' => 'Mudah dikonsumsi langsung atau dicampur minuman', 'en' => 'Easy to take directly or mix into drinks'],
-				['id' => 'Cocok dijadikan rutinitas harian', 'en' => 'Easy to make a daily habit'],
-			],
-			'is_image_only' => true,
-		],
-	];
+	$product_hash_map = [];
+	foreach ($products as $i => $p) $product_hash_map['#' . $p['slug']] = $i;
 	?>
 	<!DOCTYPE html>
 	<html lang="id">
@@ -247,11 +27,12 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>MaduJSR</title>
+		<title><?= e(setting('site_title', 'MaduJSR')) ?></title>
 
+		<link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
 		<link rel="icon" type="image/png" href="assets/img/logo1.png" />
+		<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,500;1,800&display=swap" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -308,7 +89,7 @@
 				content: ""; position: absolute; top: -90px; left: -130px; width: 420px; height: 420px;
 				background-image: url('assets/img/template/graphic-hexagon.png');
 				background-size: 60px 104px; background-repeat: repeat; opacity: .55; pointer-events: none; z-index: 0;
-			}
+				}
 			#featured-services::after {
 				content: ""; position: absolute; bottom: -110px; right: -130px; width: 420px; height: 420px;
 				background-image: url('assets/img/template/graphic-hexagon.png');
@@ -578,16 +359,15 @@
 			.testimonial .owl-nav .owl-next:hover { background: #a85c13; color: #ffffff; }
 			.testimonial-carousel .owl-dots { display: none !important; }
 
-			/* TESTIMONIAL: tinggi semua card sama (tidak tergantung panjang teks) */
 			.testimonial .testimonial-item {
-				height: 300px !important;          /* tinggi tetap, sama untuk semua card */
+				height: 300px !important;
 				overflow: hidden;
 			}
 			.testimonial .testimonial-item .testimonial-text {
-				flex: 1 1 auto;                    /* area teks mengisi ruang yang tersisa */
+				flex: 1 1 auto;
 				min-height: 0;
 				margin-bottom: 8px;
-				overflow-y: auto;                  /* teks panjang (Baca Selengkapnya) scroll di dalam card */
+				overflow-y: auto;
 				scrollbar-width: thin;
 				scrollbar-color: #d9a441 transparent;
 			}
@@ -595,10 +375,9 @@
 			.testimonial .testimonial-item .testimonial-text::-webkit-scrollbar-thumb { background: #d9a441; border-radius: 4px; }
 			.testimonial .testimonial-item .read-more-btn {
 				flex: 0 0 auto;
-				align-self: center;                /* tombol di tengah */
+				align-self: center;
 				margin-bottom: 6px;
 			}
-			/* Foto, nama, jabatan, bintang selalu menempel di bagian bawah card */
 			.testimonial .testimonial-item > .d-flex:not(.stars) { margin-top: auto; flex: 0 0 auto; }
 			@media (max-width: 767px) {
 				.testimonial .testimonial-item { height: 330px !important; }
@@ -694,9 +473,6 @@
 			.language-toggle .language-flag { width: 26px; height: 18px; cursor: pointer; }
 			.language-option.active img { box-shadow: 0 0 0 2px #d9a441 !important; }
 
-			/* =========================================================
-			   HILANGKAN PANAH DROPDOWN DI MENU BAHASA
-			========================================================= */
 			.site-menu .has-children.language-menu > a::after,
 			.site-menu .has-children.language-menu > a::before,
 			.site-menu .language-menu .language-toggle::after,
@@ -723,9 +499,8 @@
 				display: none !important;
 			}
 
-
 			/* MENU MOBILE BARU */
-			.site-mobile-menu { display: none !important; }       /* menu lama dimatikan */
+			.site-mobile-menu { display: none !important; }
 			.mnav-toggle {
 				margin-left: auto; padding: 4px 6px; background: none; border: 0;
 				line-height: 0; cursor: pointer; color: #333;
@@ -930,6 +705,12 @@
 			.site-navbar.sticky .logo {
 				max-height: 42px; width: auto; transition: max-height 0.25s ease;
 			}
+			.site-logo .logo-scroll-img, .site-logo .logo-scroll-text { display: none; }
+			.site-logo .logo-scroll-text { font-weight: 800; font-size: 24px; letter-spacing: .5px; line-height: 1; }
+			.site-navbar.sticky .site-logo[data-scroll-logo="image"] .logo-main,
+			.site-navbar.sticky .site-logo[data-scroll-logo="text"] .logo-main { display: none; }
+			.site-navbar.sticky .site-logo[data-scroll-logo="image"] .logo-scroll-img { display: inline-block; }
+			.site-navbar.sticky .site-logo[data-scroll-logo="text"] .logo-scroll-text { display: inline-block; }
 			@media (max-width: 991.98px) {
 				.site-navbar.sticky {
 					padding-top: 4px !important; padding-bottom: 4px !important; min-height: 54px;
@@ -976,8 +757,13 @@
 			.wa-consult .wa-text .wa-desc b { color: #ffffff; }
 			@media (max-width: 576px) {
 				.wa-consult { bottom: 100px; width: 66px; height: 66px; padding-left: 8px; }
-				.wa-consult:hover { width: 66px; }
-				.wa-consult .wa-text { display: none; }
+				.wa-consult:hover { width: 66px; background: #211d17; }
+				.wa-consult { touch-action: pan-y; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+				.wa-consult .wa-text { display: flex; opacity: 0; transform: translateX(10px); pointer-events: none; padding-right: 18px; }
+				/* ditarik ke kiri -> melebar dan teks terlihat; tarik ke kanan -> menutup */
+				.wa-consult.open, .wa-consult.open:hover { width: min(330px, calc(100vw - 10px)); background: #2f2820; }
+				.wa-consult.open .wa-text { opacity: 1; transform: translateX(0); }
+				.wa-consult .wa-avatar { -webkit-user-drag: none; }
 			}
 
 			/* =========================================================
@@ -991,23 +777,17 @@
 			}
 			.product-page.open { opacity: 1; visibility: visible; transform: none; }
 
-			/* =========================================================
-			   MODE IMAGE-ONLY (Madu Imun) & HALAMAN KOSONG
-			   Gambar pas satu layar (setelah navbar), tanpa scroll vertikal
-			========================================================= */
 			.product-page.image-only .pp-info,
 			.product-page.image-only .pp-extra,
 			.product-page.image-only .pp-nav { display: none !important; }
 
 			.product-page.image-only {
-				overflow: hidden;              /* tidak ada scroll sama sekali */
+				overflow: hidden;
 				display: flex;
 				flex-direction: column;
 				height: 100vh;
-				height: 100dvh;                /* mobile: tinggi layar yang sebenarnya */
+				height: 100dvh;
 			}
-			/* Navbar putih dihilangkan: tombol Kembali melayang di atas gambar,
-			   sehingga gambar mendapat tinggi layar penuh */
 			.product-page.image-only .product-page-bar {
 				position: absolute;
 				top: 0; left: 0; right: 0;
@@ -1015,20 +795,22 @@
 				background: transparent;
 				backdrop-filter: none;
 				border-bottom: 0;
-				pointer-events: none;          /* area kosong tidak menghalangi klik gambar */
+				pointer-events: none;
+				z-index: 20;
 			}
 			.product-page.image-only .product-page-bar .pp-back { pointer-events: auto; }
 			.product-page.image-only .product-page-bar .pp-logo { display: none; }
 
 			.product-page.image-only .pp-hero {
 				flex: 1 1 auto;
-				min-height: 0;                 /* penting: agar flex boleh menyusut */
+				min-height: 0;
 				display: block;
 				padding: 0;
 				margin: 0;
 				max-width: 100%;
 				overflow: hidden;
 				background: linear-gradient(135deg, #ffffff 0%, #faf4e5 100%);
+				position: relative;
 			}
 			.product-page.image-only .pp-left,
 			.product-page.image-only .pp-media,
@@ -1045,23 +827,112 @@
 				overflow: hidden;
 				transform: none;
 			}
-			.product-page.image-only .pp-img-link { cursor: zoom-in; }
+			.product-page.image-only .pp-img-link { cursor: default; }
 			.product-page.image-only .pp-img-link:hover { transform: none; }
 			.product-page.image-only .pp-img-link img {
 				display: block;
 				width: 100%;
 				height: 100%;
 				max-height: none;
-				object-fit: contain;           /* seluruh gambar terlihat, tidak terpotong */
+				object-fit: cover;
 				object-position: center;
 				filter: none;
 				animation: none;
 				border-radius: 0;
+				transition: opacity .3s ease;
 			}
 
-			/* =========================================================
-			   KHUSUS HALAMAN KOSONG (#emptyPage): tampilkan logo
-			========================================================= */
+			@media (max-aspect-ratio: 6/5) {
+				.product-page.image-only .pp-img-link img {
+					object-fit: cover;
+					object-position: center center;
+					background: #faf4e5;
+				}
+			}
+
+			.product-page.image-only .pp-img-link img.is-loading {
+				opacity: 0;
+			}
+
+			.pp-store-badge {
+				position: absolute;
+				left: 24px;
+				bottom: 24px;
+				z-index: 15;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 8px;
+				padding: 0;
+				background: transparent;
+				border-radius: 0;
+				box-shadow: none;
+				pointer-events: auto;
+				cursor: pointer;
+				text-decoration: none;
+			}
+			.pp-store-badge .pp-store-label {
+				font-size: 11px;
+				font-weight: 800;
+				letter-spacing: 1.2px;
+				color: #4a4338;
+				text-transform: uppercase;
+				line-height: 1.1;
+				text-align: center;
+			}
+			.pp-store-badge .pp-store-logo-img {
+				display: block;
+				height: 90px;
+				width: auto;
+				object-fit: contain;
+				filter: drop-shadow(0 0 6px rgba(255,255,255,.85)) drop-shadow(0 2px 6px rgba(0,0,0,.25));
+			}
+			.product-page:not(.image-only) .pp-store-badge { left: 12px; bottom: 12px; z-index: 6; gap: 4px; }
+			.product-page:not(.image-only) .pp-store-badge .pp-store-logo-img { height: 56px; }
+			.product-page.image-only .pp-store-label { display: none; }
+
+			.pp-store-badge { opacity: 0; transition: opacity .35s ease; }
+			.pp-store-badge.placed { opacity: 1; }
+			.pp-store-badge .pp-store-logo-img { transition: transform .25s ease; }
+			.pp-store-badge:hover .pp-store-logo-img,
+			.pp-store-badge:focus-visible .pp-store-logo-img { transform: scale(1.06); }
+			.pp-store-badge.is-anchored { flex-direction: row; align-items: center; justify-content: center; gap: 0; }
+			.pp-store-badge.is-anchored .pp-store-logo-img { width: 100%; height: 100%; object-fit: contain; }
+
+			.pp-store-badge.logo-hexabrain  { --logo-vw: 1918; --logo-vh: 876; --logo-x: 985; --logo-y: 500; --logo-w: 86; --logo-h: 101; }
+			.pp-store-badge.logo-multiflora { --logo-vw: 1918; --logo-vh: 876; --logo-x: 985; --logo-y: 500; --logo-w: 86; --logo-h: 101; }
+			.pp-store-badge.logo-sangket    { --logo-vw: 1918; --logo-vh: 876; --logo-x: 985; --logo-y: 536; --logo-w: 86; --logo-h: 101; }
+			.pp-store-badge.logo-hitam      { --logo-vw: 1918; --logo-vh: 876; --logo-x: 885; --logo-y: 536; --logo-w: 86; --logo-h: 101; }
+			.pp-store-badge.logo-gold       { --logo-vw: 1918; --logo-vh: 876; --logo-x: 989; --logo-y: 570; --logo-w: 86; --logo-h: 101; }
+			.pp-store-badge.logo-imun       { --logo-vw: 1918; --logo-vh: 876; --logo-x: 987; --logo-y: 500; --logo-w: 86; --logo-h: 101; }
+
+			.pp-store-badge.logo-hexabrain,
+			.pp-store-badge.logo-multiflora,
+			.pp-store-badge.logo-sangket,
+			.pp-store-badge.logo-hitam,
+			.pp-store-badge.logo-gold,
+			.pp-store-badge.logo-imun {
+				--logo-mobile-vw: 375; --logo-mobile-vh: 667;
+				--logo-mobile-x: 150; --logo-mobile-y: 610;
+				--logo-mobile-w: 75; --logo-mobile-h: 52;
+			}
+
+			@media (max-width: 767px) {
+				.pp-store-badge {
+					left: 14px;
+					bottom: 14px;
+					padding: 0;
+					gap: 6px;
+					border-radius: 0;
+				}
+				.pp-store-badge .pp-store-label { font-size: 9px; letter-spacing: 1px; }
+				.pp-store-badge .pp-store-logo-img { height: 60px; }
+			}
+			@media (max-width: 380px) {
+				.pp-store-badge { padding: 0; }
+				.pp-store-badge .pp-store-logo-img { height: 52px; }
+			}
+
 			#emptyPage.image-only .product-page-bar .pp-logo {
 				display: block !important;
 			}
@@ -1127,7 +998,7 @@
 				display: block;
 				max-width: 380px;
 				width: 100%;
-				cursor: zoom-in;
+				cursor: default;
 				text-decoration: none;
 				transition: transform .4s ease;
 			}
@@ -1297,9 +1168,6 @@
 			}
 			.trust-btn i { font-size: 16px; color: #666; }
 
-			/* =========================================================
-			   TRUST BUTTONS — paksa horizontal (dua tombol sejajar)
-			========================================================= */
 			.pp-trust-buttons {
 				display: flex;
 				flex-wrap: nowrap;
@@ -1324,19 +1192,19 @@
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
-			}
+				}
 			@media (max-width: 380px) {
 				.pp-trust-buttons .trust-btn { font-size: 10.5px; padding: 8px 6px; gap: 4px; }
 				.pp-trust-buttons .trust-btn i { font-size: 12px; }
 			}
 			@media (min-width: 768px) {
 				.pp-trust-buttons { flex-wrap: wrap; gap: 12px; }
-				.pp-trust-buttons .trust-btn-wrap { flex: 0 0 auto; }
-				.pp-trust-buttons .trust-btn {
-					width: auto; padding: 11px 22px; font-size: 14px; gap: 10px;
+					.pp-trust-buttons .trust-btn-wrap { flex: 0 0 auto; }
+					.pp-trust-buttons .trust-btn {
+						width: auto; padding: 11px 22px; font-size: 14px; gap: 10px;
+					}
+					.pp-trust-buttons .trust-btn i { font-size: 16px; }
 				}
-				.pp-trust-buttons .trust-btn i { font-size: 16px; }
-			}
 
 			.trust-popup {
 				position: absolute;
@@ -1367,7 +1235,7 @@
 				border-bottom: 12px solid #ffffff;
 				filter: drop-shadow(0 -2px 3px rgba(0,0,0,.06));
 			}
-			.trust-btn-wrap:hover .trust-popup {
+				.trust-btn-wrap:hover .trust-popup {
 				opacity: 1;
 				visibility: visible;
 				pointer-events: auto;
@@ -1562,7 +1430,31 @@
 				.pp-buy { width: 100%; padding: 12px 20px; }
 			}
 
-			/* FOOTER COPYRIGHT */
+			.pp-buy { box-sizing: border-box; }
+
+			@media (max-width: 991px) {
+				.product-page:not(.image-only) .pp-left { display: contents; }
+				.product-page:not(.image-only) .pp-media { order: 1; }
+				.product-page:not(.image-only) .pp-info  { order: 2; }
+				.product-page:not(.image-only) .pp-extra { order: 3; margin-top: 8px; }
+			}
+
+			@media (max-width: 767px) {
+				.pp-hero { grid-template-columns: minmax(0, 1fr); }
+				.pp-info, .pp-left { min-width: 0; }
+				.pp-info .img-trace { max-width: 100%; }
+				.product-page { overflow-x: hidden; }
+
+				.pp-trust-buttons { position: relative; }
+				.pp-trust-buttons .trust-btn-wrap { position: static; }
+				.pp-trust-buttons .trust-popup { left: 0; right: 0; width: auto; transform: translateY(-8px); }
+				.pp-trust-buttons .trust-btn-wrap:hover .trust-popup,
+				.pp-trust-buttons .trust-btn-wrap:focus-within .trust-popup {
+					opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0);
+				}
+				.pp-trust-buttons .trust-popup::after { display: none; }
+			}
+
 			.footer-area .footer_copyright {
 				display: flex; align-items: center; justify-content: space-between;
 				flex-wrap: wrap; gap: 12px 24px;
@@ -1587,7 +1479,321 @@
 				}
 			}
 
-			.fancybox-caption { font-size: 15px !important; font-weight: 600; }
+			/* =========================================================
+			   HALAMAN KOSONG — MULTI KONTEN (FAQ, TENTANG KAMI, DLL)
+			========================================================= */
+			#emptyPage.image-only {
+				overflow-y: auto !important;
+				display: block !important;
+				height: 100dvh;
+				background: linear-gradient(135deg, #ffffff 0%, #faf4e5 100%);
+			}
+
+			#emptyPage.image-only .product-page-bar {
+				position: sticky !important;
+				top: 0;
+				background: rgba(255,255,255,.92) !important;
+				backdrop-filter: blur(8px);
+				border-bottom: 1px solid rgba(210,120,29,.15);
+				pointer-events: auto !important;
+				padding: 14px 5%;
+				z-index: 10;
+			}
+
+			#emptyPage .empty-page-content { display: none; width: 100%; }
+			#emptyPage .empty-page-content.active { display: block; }
+
+			/* =========================================================
+			   BANNER HALAMAN (FAQ, TENTANG KAMI, CARA PEMESANAN,
+			   HUBUNGI KAMI) — GAMBAR FULL WIDTH
+			========================================================= */
+			#emptyPage .container-fluid.bg-breadcrumb {
+				width: 100%;
+				max-width: 100%;
+				margin: 0;
+				padding-left: 0;
+				padding-right: 0;
+			}
+			#emptyPage .bg-breadcrumb {
+				background-color: #faf4e5;
+				background-image: url(assets/img/faq/faq_bg.jpeg);
+				background-size: cover;            /* sebelumnya: contain */
+				background-position: center center;
+				background-repeat: no-repeat;
+				width: 100%;
+				padding: 60px 0;
+				min-height: 400px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			@media (max-width: 767px) {
+				#emptyPage .bg-breadcrumb { min-height: 260px; padding: 40px 0; }
+			}
+			#emptyPage .bg-breadcrumb .breadcrumb-item a {
+				color: #ffffff;
+				text-decoration: none;
+				transition: .3s ease;
+			}
+			#emptyPage .bg-breadcrumb .breadcrumb-item a:hover { color: #f4d98d; }
+			#emptyPage .bg-breadcrumb .breadcrumb-item.active { color: #f4d98d !important; }
+			#emptyPage .bg-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+				color: rgba(255,255,255,.6);
+			}
+
+			/* Background khusus halaman Tentang Kami */
+			#emptyPage .bg-breadcrumb.bg-tentang-kami {
+				background-image: url(assets/img/tentang_kami.jpeg);
+			}
+
+			/* Background khusus halaman Cara Pemesanan */
+			#emptyPage .bg-breadcrumb.bg-cara-pemesanan {
+				background-image: none;
+				padding: 0;
+				min-height: 0;
+				display: block;
+				position: relative;
+			}
+			#emptyPage .bg-breadcrumb.bg-cara-pemesanan {
+				height: 400px !important;   /* sama dengan banner FAQ */
+				overflow: hidden;
+				background-color: #e9dcc3;
+			}
+			/* Latar blur dari gambar yang sama, mengisi sisi kiri-kanan */
+			#emptyPage .bg-breadcrumb.bg-cara-pemesanan::before {
+				content: "";
+				position: absolute;
+				inset: -30px;
+				background: url(assets/img/cara_pemesanan.jpg) center center / cover no-repeat;
+				filter: blur(22px);
+				z-index: 0;
+			}
+			/* Gambar utama tampil utuh (tidak terpotong) di atas latar blur */
+			#emptyPage .bg-breadcrumb.bg-cara-pemesanan .banner-img {
+				position: relative;
+				z-index: 1;
+				display: block;
+				width: 100%;
+				height: 100%;
+				object-fit: cover; /* Diubah dari contain ke cover agar full width */
+				object-position: center center;
+			}
+			#emptyPage .bg-breadcrumb.bg-cara-pemesanan > .container {
+				z-index: 2;
+			}
+			@media (max-width: 767px) {
+				#emptyPage .bg-breadcrumb.bg-cara-pemesanan { height: 260px !important; }   /* sama dengan FAQ di mobile */
+			}
+			#emptyPage .bg-breadcrumb.bg-cara-pemesanan > .container {
+				position: absolute;
+				inset: 0;
+				max-width: 100% !important;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 !important;
+			}
+			#emptyPage .bg-breadcrumb.bg-cara-pemesanan > .container h4 {
+				margin: 0 !important;
+				text-shadow: 0 3px 18px rgba(0,0,0,.45);
+			}
+			@media (max-width: 767px) {
+				#emptyPage .bg-breadcrumb.bg-cara-pemesanan > .container h4 { font-size: 1.8rem; }
+			}
+
+			/* Posisi judul banner khusus HP (diatur dari CMS) */
+			@media (max-width: 767px) {
+				#emptyPage .bg-breadcrumb h4[style*="--tx"] {
+					left: var(--txm, var(--tx)) !important;
+					top: var(--tym, var(--ty)) !important;
+				}
+			}
+
+			/* Langkah Pemesanan (halaman Cara Pemesanan) */
+			#emptyPage .steps { font-family: 'Barlow', 'Poppins', sans-serif; color: #111; }
+			#emptyPage .steps .step { display: flex; align-items: flex-start; gap: 22px; margin-bottom: 30px; }
+			#emptyPage .steps .step:last-child { margin-bottom: 0; }
+			@media (min-width: 992px) { #emptyPage .steps { width: max-content; max-width: 100%; margin-left: auto; margin-right: auto; } }   /* desktop: blok langkah di tengah */
+			#emptyPage .steps .step-ic { flex: 0 0 34px; width: 34px; height: 34px; margin-top: 4px; color: #111; }
+			#emptyPage .steps .step-ic svg { width: 100%; height: 100%; display: block; }
+			#emptyPage .steps .step-tx strong { display: block; font-style: italic; font-weight: 800; font-size: 1.55rem; line-height: 1.15; color: #000; }
+			#emptyPage .steps .step-tx span { display: block; font-weight: 500; font-size: 1.45rem; line-height: 1.3; color: #111; margin-top: 2px; }
+			@media (max-width: 767px) {
+				#emptyPage .steps .step { gap: 16px; margin-bottom: 22px; }
+				#emptyPage .steps .step-ic { flex-basis: 28px; width: 28px; height: 28px; }
+				#emptyPage .steps .step-tx strong { font-size: 1.2rem; }
+				#emptyPage .steps .step-tx span { font-size: 1.1rem; }
+			}
+
+			/* Kotak Hubungi Kami */
+			#emptyPage .contact-box { background: #E9B949; text-align: center; padding: 64px 24px 72px; }
+			#emptyPage .contact-box h3 { font-size: 1.9rem; font-weight: 500; color: var(--cb-title, #3d2a05); margin: 0 0 18px; }
+			#emptyPage .contact-box p { font-size: 1.3rem; color: var(--cb-text, #5a3f0c); margin: 0 0 32px; line-height: 1.5; }
+			#emptyPage .contact-box .contact-box-btn {
+				display: inline-flex; align-items: center; justify-content: center; gap: 14px;
+				background: var(--cb-btn, #4a3410); color: var(--cb-btntext, #fff); font-weight: 700; font-size: 1.2rem;
+				text-transform: uppercase; text-decoration: none; letter-spacing: .6px; padding: 16px 38px;
+				box-shadow: 0 8px 22px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.18);
+				transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+			}
+			#emptyPage .contact-box .contact-box-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 28px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.18); }
+			#emptyPage .contact-box .contact-box-btn:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(0,0,0,.3); }
+			#emptyPage .contact-box .contact-box-btn .cb-ic { font-size: 1.7em; line-height: 1; }
+			#emptyPage .contact-box .contact-box-btn .cb-txt { text-align: left; }
+			#emptyPage .contact-box .contact-box-btn:hover { filter: brightness(.9); color: var(--cb-btntext, #fff); }
+			#emptyPage .contact-box .contact-box-btn .cb-l1,
+			#emptyPage .contact-box .contact-box-btn .cb-l2 { display: block; line-height: 1.25; }
+						@media (max-width: 767px) {
+				#emptyPage .contact-box { padding: 44px 18px 52px; }
+				#emptyPage .contact-box h3 { font-size: 1.5rem; }
+				#emptyPage .contact-box p { font-size: 1.05rem; }
+			}
+
+			#emptyPage .container.py-5 {
+				color: #333;
+				font-size: 15px;
+				line-height: 1.8;
+			}
+			#emptyPage .container.py-5 h2 {
+				color: #211d17;
+				font-weight: 800;
+				margin-bottom: 18px;
+			}
+			#emptyPage .container.py-5 ul,
+			#emptyPage .container.py-5 ol { padding-left: 22px; }
+			#emptyPage .container.py-5 li { margin-bottom: 8px; }
+
+			/* =========================================================
+			   FAQ ACCORDION — STYLE BIRU
+			   Loading pertama: hanya .faq-acc-head yang tampil,
+			   .faq-acc-body tersembunyi sampai item diklik (class "open").
+			========================================================= */
+			#emptyPage .faq-acc {
+				background: #ffffff;
+				border: 2px solid #e8c777;
+				border-radius: 12px;
+				overflow: hidden;
+				box-shadow: 0 4px 18px rgba(80, 60, 25, .10);
+			}
+
+			#emptyPage .faq-acc-item {
+				border-bottom: 1px solid rgba(210, 120, 29, .18);
+			}
+			#emptyPage .faq-acc-item.open {
+				background: #fffaf0;
+			}
+			#emptyPage .faq-acc-item:last-child {
+				border-bottom: 0;
+			}
+
+			#emptyPage .faq-acc-head {
+				width: 100%;
+				padding: 22px 24px;
+				background: none;
+				border: 0;
+				text-align: left;
+				font-size: 16px;
+				font-weight: 500;
+				color: #a85c13;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 16px;
+				font-family: inherit;
+				line-height: 1.4;
+				transition: background .2s ease;
+			}
+			#emptyPage .faq-acc-head:hover {
+				background: #fff3d8;
+				color: #d2781d;
+			}
+			#emptyPage .faq-acc-item.open .faq-acc-head {
+				color: #d2781d;
+				font-weight: 600;
+			}
+
+			#emptyPage .faq-acc-head::after {
+				content: "";
+				flex: 0 0 18px;
+				width: 18px;
+				height: 18px;
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d2781d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: contain;
+				transition: transform .3s ease;
+			}
+			#emptyPage .faq-acc-item.open .faq-acc-head::after {
+				transform: rotate(180deg);
+			}
+
+			/* Body: tertutup (tersembunyi penuh) secara default */
+			#emptyPage .faq-acc-body {
+				display: grid;
+				grid-template-rows: 0fr;
+				visibility: hidden;
+				transition: grid-template-rows .35s ease, visibility 0s linear .35s;
+			}
+			/* Body: terbuka hanya jika item punya class "open" */
+			#emptyPage .faq-acc-item.open .faq-acc-body {
+				grid-template-rows: 1fr;
+				visibility: visible;
+				transition: grid-template-rows .35s ease, visibility 0s;
+			}
+			#emptyPage .faq-acc-body > p {
+				overflow: hidden;
+				min-height: 0;
+				margin: 0;
+				padding: 0 24px;              /* padding bawah hanya saat terbuka */
+				color: #4a4338;
+				font-size: 14.5px;
+				line-height: 1.75;
+				transition: padding .35s ease;
+			}
+			#emptyPage .faq-acc-item.open .faq-acc-body > p {
+				padding: 0 24px 20px;
+			}
+
+
+			/* FAQ: 2 kolom (kiri accordion, kanan gambar) */
+			#emptyPage .faq-side-img {
+				display: block;
+				width: 100%;
+				height: auto;
+				border-radius: 20px;
+				box-shadow: 0 14px 36px rgba(80, 60, 25, .16);
+			}
+			@media (min-width: 992px) {
+				#emptyPage .faq-layout .col-lg-5 {
+					position: sticky;
+					top: 90px;
+					align-self: flex-start;
+				}
+			}
+			@media (max-width: 991px) {
+				#emptyPage .faq-side-img { max-width: 560px; margin: 8px auto 0; }
+			}
+
+			/*** Single Page Hero Header Start ***/
+			.bg-breadcrumb {
+				position: relative;
+				overflow: hidden;
+				background-position: center center;
+				background-repeat: no-repeat;
+				background-size: cover;
+				padding: 60px 0 60px 0;
+				transition: 0.5s;
+			}
+
+			.bg-breadcrumb .breadcrumb {
+				position: relative;
+			}
+
+			.bg-breadcrumb .breadcrumb .breadcrumb-item a {
+				color: var(--bs-white);
+			}
+			/*** Single Page Hero Header End ***/
 		</style>
 	</head>
 	<body>
@@ -1602,7 +1808,7 @@
 			<div class="site-mobile-menu-body"></div>
 		</div>
 
-		<!-- MENU MOBILE (mandiri, tidak bergantung menu.js) -->
+		<!-- MENU MOBILE -->
 		<div id="mobileNav" class="mnav" aria-hidden="true">
 			<div class="mnav-backdrop" data-mnav-close></div>
 			<nav class="mnav-panel" aria-label="Menu utama">
@@ -1624,7 +1830,16 @@
 			<div class="container">
 				<div class="row align-items-center">
 					<div class="col-6 col-xl-2">
-						<h1 class="mb-0 site-logo"><a href="/"><img src="assets/img/logo1.png" alt="MaduJSR" class="logo"></a></h1>
+						<?php
+						$logoMain = setting('site_logo') ?: 'assets/img/logo1.png';
+						$logoMode = setting('logo_scroll_mode', 'same');
+						$logoAlt  = setting('site_logo_scroll');
+						$logoTxt  = trim(setting('site_logo_scroll_text'));
+						$logoClr  = preg_match('/^#[0-9a-fA-F]{3,8}$/', setting('site_logo_scroll_color')) ? setting('site_logo_scroll_color') : '#b8860b';
+						if ($logoMode === 'image' && $logoAlt === '') $logoMode = 'same';
+						if ($logoMode === 'text' && $logoTxt === '') $logoMode = 'same';
+						?>
+						<h1 class="mb-0 site-logo" data-scroll-logo="<?= e($logoMode) ?>"><a href="/madujsr_new"><img src="<?= e($logoMain) ?>" alt="MaduJSR" class="logo logo-main"><?php if ($logoMode === 'image'): ?><img src="<?= e($logoAlt) ?>" alt="MaduJSR" class="logo logo-scroll-img"><?php elseif ($logoMode === 'text'): ?><span class="logo-scroll-text" style="color:<?= e($logoClr) ?>"><?= e($logoTxt) ?></span><?php endif; ?></a></h1>
 					</div>
 					<div class="col-12 col-md-10 d-none d-xl-block">
 						<nav class="site-navigation position-relative text-right" role="navigation">
@@ -1651,17 +1866,17 @@
 		</header>
 
 		<section id="home" class="home_bg">
-			<video class="hero-video" autoplay muted loop playsinline preload="auto">
-				<source src="https://res.cloudinary.com/ppuqbktw/video/upload/q_auto,f_auto/v1787329277/madu3.mp4" type="video/mp4">
+			<video class="hero-video" autoplay muted loop playsinline preload="metadata">
+				<source src="<?= e(setting('hero_video')) ?>" type="video/mp4">
 			</video>
 			<div class="hero-overlay"></div>
 			<div class="container hero-content">
 				<div class="row w-100">
 					<div class="col-lg-10 offset-lg-1 col-sm-12 text-center">
 						<div class="hero-text">
-							<h2 data-id="Madu Sehat Dari Alam" data-en="Natural Healthy Honey">Madu Sehat Dari Alam</h2>
-							<p data-id="Kami membantu anda memahami dan memilih kebaikan dari alam." data-en="We help you understand and choose nature's goodness.">
-								Kami membantu anda memahami dan memilih kebaikan dari alam.
+							<h2<?= sa('hero_title') ?>><?= st('hero_title') ?></h2>
+							<p<?= sa('hero_text') ?>>
+								<?= st('hero_text') ?>
 							</p>
 						</div>
 					</div>
@@ -1672,46 +1887,16 @@
 		<section id="featured-services" class="featured-services section">
 			<div class="container">
 				<div class="row gy-5 justify-content-center">
-					<div class="col-6 col-md-3 d-flex" data-aos="fade-up" data-aos-delay="100">
-						<div class="service-item1" style="background-image: url('assets/img/template/murni@4x-8.png');">
+					<?php foreach ($services as $i => $s): ?>
+					<div class="col-6 col-md-3 d-flex" data-aos="fade-up" data-aos-delay="<?= ($i + 1) * 100 ?>">
+						<div class="service-item<?= ($i % 4) + 1 ?>" style="background-image: url('<?= e($s['bg_image']) ?>');">
 							<div class="service-content">
-								<h4 data-id="Murni &amp; Alami" data-en="Pure &amp; Natural">Murni &amp; Alami</h4>
-								<p data-id="Madu murni tanpa tambahan dan tidak dipasteurisasi untuk produk raw honey." data-en="Pure honey with no additives and not pasteurized for raw honey products.">
-									Madu murni tanpa tambahan dan tidak dipasteurisasi untuk produk raw honey.
-								</p>
+								<h4<?= bia($s['title_id'], $s['title_en']) ?>><?= e($s['title_id']) ?></h4>
+								<p<?= bia($s['text_id'], $s['text_en']) ?>><?= e($s['text_id']) ?></p>
 							</div>
 						</div>
 					</div>
-					<div class="col-6 col-md-3 d-flex" data-aos="fade-up" data-aos-delay="200">
-						<div class="service-item2" style="background-image: url('assets/img/template/kualitas@4x-8.png');">
-							<div class="service-content">
-								<h4 data-id="Teruji Kualitasnya" data-en="Quality Tested">Teruji Kualitasnya</h4>
-								<p data-id="Melalui pengujian laboratorium untuk memastikan kualitas dan keamanannya." data-en="Through laboratory testing to ensure quality and safety.">
-									Melalui pengujian laboratorium untuk memastikan kualitas dan keamanannya.
-								</p>
-							</div>
-						</div>
-					</div>
-					<div class="col-6 col-md-3 d-flex" data-aos="fade-up" data-aos-delay="300">
-						<div class="service-item3" style="background-image: url('assets/img/template/halal@4x-8.png');">
-							<div class="service-content">
-								<h4 data-id="Tersertifikasi Halal" data-en="Halal Certified">Tersertifikasi Halal</h4>
-								<p data-id="Telah bersertifikasi halal untuk memberikan rasa aman saat dikonsumsi." data-en="Has obtained halal certification to provide peace of mind when consumed.">
-									Telah bersertifikasi halal untuk memberikan rasa aman saat dikonsumsi.
-								</p>
-							</div>
-						</div>
-					</div>
-					<div class="col-6 col-md-3 d-flex" data-aos="fade-up" data-aos-delay="400">
-						<div class="service-item4" style="background-image: url('assets/img/template/resmi@4x-8.png');">
-							<div class="service-content">
-								<h4 data-id="Resmi &amp; Terdaftar" data-en="Official &amp; Registered">Resmi &amp; Terdaftar</h4>
-								<p data-id="Memiliki nomor P-IRT sebagai produk pangan yang resmi terdaftar." data-en="Has a P-IRT number as an officially registered food product.">
-									Memiliki nomor P-IRT sebagai produk pangan yang resmi terdaftar.
-								</p>
-							</div>
-						</div>
-					</div>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</section>
@@ -1721,15 +1906,15 @@
 			<div class="container">
 				<div class="about-content">
 					<h2>
-						<span data-id="Kebaikan Alami dalam " data-en="Natural Goodness in ">Kebaikan Alami dalam </span>
-						<br /><em class="text-madu"><span data-id="Setiap Tetes" data-en="Every Drop">Setiap Tetes</span></em>
+						<span<?= sa('about_h') ?>><?= st('about_h') ?></span>
+						<br /><em class="text-madu"><span<?= sa('about_em') ?>><?= st('about_em') ?></span></em>
 					</h2>
-					<p data-id="Kami percaya, madu bukan sekedar pemanis." data-en="We believe honey is not just a sweetener."><strong>Kami percaya, madu bukan sekedar pemanis.</strong></p>
-					<p data-id="Madu adalah bagian dari alam yang dapat menemani keluarga dalam berbagai momen—diminum langsung, dicampurkan ke minuman, atau menjadi bagian dari rutinitas menjaga kebugaran tubuh." data-en="Honey is part of nature that can accompany families in various moments—drunk directly, mixed into drinks, or as part of a routine to maintain body fitness.">
-						Madu adalah bagian dari alam yang dapat menemani keluarga dalam berbagai momen—diminum langsung, dicampurkan ke minuman, atau menjadi bagian dari rutinitas menjaga kebugaran tubuh.
+					<p<?= sa('about_lead') ?>><strong><?= st('about_lead') ?></strong></p>
+					<p<?= sa('about_p1') ?>>
+						<?= st('about_p1') ?>
 					</p>
-					<p data-id="Karena itu, Madu JSR hadir dengan pilihan madu murni dari sumber nektar yang berbeda, sehingga setiap jenis memiliki karakter dan keunikan tersendiri." data-en="Therefore, Madu JSR offers pure honey from different nectar sources, so each type has its own character and uniqueness.">
-						Karena itu, Madu JSR hadir dengan pilihan madu murni dari sumber nektar yang berbeda, sehingga setiap jenis memiliki karakter dan keunikan tersendiri.
+					<p<?= sa('about_p2') ?>>
+						<?= st('about_p2') ?>
 					</p>
 				</div>
 			</div>
@@ -1746,7 +1931,16 @@
 								<div class="honey-blob blob-1"></div>
 								<div class="honey-blob blob-2"></div>
 								<div class="honey-blob blob-3"></div>
-								<img src="<?= e($p['img']) ?>" class="<?= e($p['class']) ?>" alt="<?= e($p['alt']) ?>">
+								<img
+                                    src="<?= e($p['img']) ?>"
+                                    class="<?= e($p['class']) ?>"
+                                    alt="<?= e($p['alt']) ?>"
+                                    width="600"
+                                    height="600"
+                                    loading="<?= $i === 0 ? 'eager' : 'lazy' ?>"
+                                    decoding="async"
+                                    <?= $i === 0 ? 'fetchpriority="high"' : '' ?>
+                                >
 							</div>
 							<div class="product-info">
 								<span class="product-label" data-id="MADU MURNI JSR" data-en="PURE HONEY JSR">MADU MURNI JSR</span>
@@ -1755,11 +1949,11 @@
 									<?= e($p['desc']['id']) ?>
 								</p>
 								<a href="javascript:void(0)" class="btn btn-success" data-id="Lihat Produk" data-en="View Product">Lihat Produk</a>
+								</div>
 							</div>
 						</div>
-					</div>
 					<?php endforeach; ?>
-				</div>
+					</div>
 
 				<button class="carousel-control-prev" type="button"
 						data-bs-target="#productHeroCarousel" data-bs-slide="prev" aria-label="Produk sebelumnya">
@@ -1779,21 +1973,27 @@
 				<div class="row">
 					<div class="col-lg-10">
 						<div class="jsr-heading">
-							<div class="jsr-heading-label" data-id="KEUNGGULAN MADU JSR" data-en="JSR HONEY ADVANTAGES"><span></span>KEUNGGULAN MADU JSR</div>
-							<h2 data-id="Kenapa Memilih Madu JSR?" data-en="Why Choose Madu JSR?">Kenapa Memilih <em>Madu JSR?</em></h2>
-							<p data-id="Kualitas madu tidak hanya dilihat dari rasa dan warna. Kami menjaga kualitasnya dengan memperhatikan karakter alami madu dan memastikan produk melalui pengujian yang diperlukan." data-en="Honey quality is not only judged by taste and colour. We maintain quality by paying attention to the natural character of honey and ensuring the product undergoes necessary testing.">
-								Kualitas madu tidak hanya dilihat dari rasa dan warna. Kami menjaga kualitasnya dengan memperhatikan karakter alami madu dan memastikan produk melalui pengujian yang diperlukan.
+							<div class="jsr-heading-label"<?= sa('why_label') ?>><span></span><?= st('why_label') ?></div>
+							<h2<?= sa('why_title') ?>><?= em_title('why_title', 'why_em') ?></h2>
+							<p<?= sa('why_text') ?>>
+								<?= st('why_text') ?>
 							</p>
 						</div>
 					</div>
 				</div>
 				<div class="row g-4 jsr-quality-grid">
-					<div class="col-lg-4 col-md-6"><div class="jsr-quality-card"><span class="jsr-card-number">01</span><div class="jsr-card-icon"><i class="fa fa-leaf"></i></div><h3 data-id="Madu Murni" data-en="Pure Honey">Madu Murni</h3><p data-id="Madu JSR merupakan madu murni tanpa tambahan. Produk raw honey juga tidak melalui proses pasteurisasi, sehingga karakter alaminya tetap terjaga." data-en="Madu JSR is pure honey with no additives. Raw honey products are also not pasteurised, so their natural character is preserved.">Madu JSR merupakan madu murni tanpa tambahan. Produk raw honey juga tidak melalui proses pasteurisasi, sehingga karakter alaminya tetap terjaga.</p><span class="jsr-card-line"></span></div></div>
-					<div class="col-lg-4 col-md-6"><div class="jsr-quality-card"><span class="jsr-card-number">02</span><div class="jsr-stat">6,78</div><span class="jsr-badge" data-id="STANDAR SNI: 3" data-en="SNI STANDARD: 3">STANDAR SNI: 3</span><h3 data-id="Kaya Enzim Alami" data-en="Rich in Natural Enzymes">Kaya Enzim Alami</h3><p data-id="Madu JSR memiliki kadar enzim diastase 6,78, lebih tinggi dari standar SNI sebesar 3. Kadar enzim yang terjaga menjadi salah satu indikator madu tidak mengalami pemanasan berlebih." data-en="Madu JSR has a diastase enzyme level of 6.78, higher than the SNI standard of 3. Maintained enzyme levels indicate that the honey has not been overheated.">Madu JSR memiliki kadar enzim diastase 6,78, lebih tinggi dari standar SNI sebesar 3. Kadar enzim yang terjaga menjadi salah satu indikator madu tidak mengalami pemanasan berlebih.</p><span class="jsr-card-line"></span></div></div>
-					<div class="col-lg-4 col-md-6"><div class="jsr-quality-card"><span class="jsr-card-number">03</span><div class="jsr-stat">39,17</div><span class="jsr-badge" data-id="BATAS MAKSIMAL: 40" data-en="MAXIMUM LIMIT: 40">BATAS MAKSIMAL: 40</span><h3 data-id="HMF Tetap Terjaga" data-en="HMF Level Maintained">HMF Tetap Terjaga</h3><p data-id="Kadar HMF Madu JSR Multifloral berada di angka 39,17, masih di bawah batas maksimal 40. Hal ini menunjukkan madu tidak terpapar pemanasan berlebihan atau penyimpanan terlalu lama." data-en="The HMF level of Madu JSR Multifloral is 39.17, still below the maximum limit of 40. This shows the honey has not been exposed to excessive heating or long storage.">Kadar HMF Madu JSR Multifloral berada di angka 39,17, masih di bawah batas maksimal 40. Hal ini menunjukkan madu tidak terpapar pemanasan berlebih atau penyimpanan terlalu lama.</p><span class="jsr-card-line"></span></div></div>
-					<div class="col-lg-4 col-md-6"><div class="jsr-quality-card"><span class="jsr-card-number">04</span><div class="jsr-card-icon"><i class="fa fa-flask"></i></div><h3 data-id="Teruji Bebas Kontaminasi" data-en="Tested Contaminant-Free">Teruji Bebas Kontaminasi</h3><p data-id="Madu JSR telah melalui pengujian dan terbukti bebas dari logam berat seperti timbal, merkuri, kadmium, dan arsen, serta bebas dari kloramfenikol." data-en="Madu JSR has been tested and proven free of heavy metals such as lead, mercury, cadmium, and arsenic, as well as free from chloramphenicol.">Madu JSR telah melalui pengujian dan terbukti bebas dari logam berat seperti timbal, merkuri, kadmium, dan arsen, serta bebas dari kloramfenikol.</p><span class="jsr-card-line"></span></div></div>
-					<div class="col-lg-4 col-md-6"><div class="jsr-quality-card"><span class="jsr-card-number">05</span><div class="jsr-stat">19,08%</div><span class="jsr-badge" data-id="TEKSTUR LEBIH KENTAL" data-en="THICKER TEXTURE">TEKSTUR LEBIH KENTAL</span><h3 data-id="Kadar Air Rendah" data-en="Low Moisture Content">Kadar Air Rendah</h3><p data-id="Kadar air Madu JSR sebesar 19,08%, membuat teksturnya lebih kental dan membantu mengurangi risiko fermentasi. Madu juga tidak mudah berubah menjadi asam." data-en="The moisture content of Madu JSR is 19.08%, giving it a thicker texture and helping reduce the risk of fermentation. The honey is also less likely to turn acidic.">Kadar air Madu JSR sebesar 19,08%, membuat teksturnya lebih kental dan membantu mengurangi risiko fermentasi. Madu juga tidak mudah berubah menjadi asam.</p><span class="jsr-card-line"></span></div></div>
-					<div class="col-lg-4 col-md-6"><div class="jsr-quality-card"><span class="jsr-card-number">06</span><div class="jsr-stat">3,02%</div><span class="jsr-badge" data-id="BATAS MAKSIMAL: 5%" data-en="MAXIMUM LIMIT: 5%">BATAS MAKSIMAL: 5%</span><h3 data-id="Sukrosa Rendah" data-en="Low Sucrose">Sukrosa Rendah</h3><p data-id="Kadar sukrosa Madu JSR sebesar 3,02%, masih di bawah batas maksimal 5%. Kadar sukrosa yang rendah juga mendukung karakter madu yang lebih murni." data-en="The sucrose content of Madu JSR is 3.02%, still below the maximum limit of 5%. Low sucrose content also supports a purer honey character.">Kadar sukrosa Madu JSR sebesar 3,02%, masih di bawah batas maksimal 5%. Kadar sukrosa yang rendah juga mendukung karakter madu yang lebih murni.</p><span class="jsr-card-line"></span></div></div>
+					<?php foreach ($advantages as $i => $a): ?>
+					<div class="col-lg-4 col-md-6"><div class="jsr-quality-card"><span class="jsr-card-number"><?= sprintf('%02d', $i + 1) ?></span>
+						<?php if ($a['stat'] !== ''): ?>
+							<div class="jsr-stat"><?= e($a['stat']) ?></div>
+							<?php if ($a['badge_id'] !== ''): ?><span class="jsr-badge"<?= bia($a['badge_id'], $a['badge_en']) ?>><?= e($a['badge_id']) ?></span><?php endif; ?>
+						<?php else: ?>
+							<div class="jsr-card-icon"><i class="fa <?= e(preg_match('/^fa-[a-z0-9-]+$/', $a['icon']) ? $a['icon'] : 'fa-leaf') ?>"></i></div>
+						<?php endif; ?>
+						<h3<?= bia($a['title_id'], $a['title_en']) ?>><?= e($a['title_id']) ?></h3>
+						<p<?= bia($a['text_id'], $a['text_en']) ?>><?= e($a['text_id']) ?></p>
+						<span class="jsr-card-line"></span></div></div>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</section>
@@ -1801,51 +2001,22 @@
 		<section id="testimonials" class="testimonial pb-5">
 			<div class="container pb-5">
 				<div class="text-center mx-auto pb-4" style="max-width: 800px;">
-					<h2 class="display-4 text-capitalize mb-2" data-id="Apa Kata Mereka?" data-en="What They Say?">Apa Kata Mereka?</h2>
+					<h2 class="display-4 text-capitalize mb-2"<?= sa('testi_title') ?>><?= st('testi_title') ?></h2>
 				</div>
 				<div class="owl-carousel owl-theme testimonial-carousel">
+					<?php foreach ($testimonials as $t): ?>
 					<div class="testimonial-item text-center p-4">
 						<p class="testimonial-text">
-							<span class="short-text" data-id="Saya suka dengan madu nya, setiap buat juice selalu saya tambahkan madu pengganti gula." data-en="I like the honey, every time I make juice I always add honey as a sugar substitute.">Saya suka dengan madu nya, setiap buat juice selalu saya tambahkan madu pengganti gula.</span>
-							<span class="full-text" data-id="Saya suka dengan madu nya, setiap buat juice selalu saya tambahkan madu pengganti gula." data-en="I like the honey, every time I make juice I always add honey as a sugar substitute.">Saya suka dengan madu nya, setiap buat juice selalu saya tambahkan madu pengganti gula.</span>
+							<span class="short-text"<?= bia($t['short']['id'], $t['short']['en']) ?>><?= e($t['short']['id']) ?></span>
+							<span class="full-text"<?= bia($t['full']['id'], $t['full']['en']) ?>><?= e($t['full']['id']) ?></span>
 						</p>
-						<div class="d-flex justify-content-center"><img src="assets/img/testimonial/chairunnisa.png" class="rounded-circle border border-4 border-warning" style="width: 60px; height: 60px; object-fit: cover;" alt="Client"></div>
-						<h4 class="text-dark" data-id="Chairunnisa" data-en="Chairunnisa">Chairunnisa</h4>
-						<p class="m-0" style="font-size: 12px; color: #666;" data-id="Karyawan" data-en="Employee">Karyawan</p>
-						<div class="d-flex justify-content-center text-warning stars"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
+						<?php if ($t['long']): ?><button class="read-more-btn" onclick="toggleTestimonial(this)" data-id="Baca Selengkapnya" data-en="Read More">Baca Selengkapnya</button><?php endif; ?>
+						<div class="d-flex justify-content-center"><img src="<?= e($t['photo']) ?>" class="rounded-circle border border-4 border-warning" style="width: 60px; height: 60px; object-fit: cover;" alt="<?= e($t['name']) ?>" loading="lazy" decoding="async"></div>
+						<h4 class="text-dark"><?= e($t['name']) ?></h4>
+						<p class="m-0" style="font-size: 12px; color: #666;"<?= bia($t['role']['id'], $t['role']['en']) ?>><?= e($t['role']['id']) ?></p>
+						<div class="d-flex justify-content-center text-warning stars"><?php for ($s = 0; $s < $t['stars']; $s++): ?><i class="fa fa-star"></i><?php endfor; ?></div>
 					</div>
-					<div class="testimonial-item text-center p-4">
-						<p class="testimonial-text">
-							<span class="short-text" data-id="Semenjak anak saya mengkonsumsi madu hexabrain 760gr 3 thn yg lalu, Alhamdulillah anak saya sehat trs & tmbh pinter & aktif..." data-en="Since my child consumed hexabrain honey 760gr 3 years ago, Alhamdulillah my child is healthy & smarter & active...">Semenjak anak saya mengkonsumsi madu hexabrain 760gr 3 thn yg lalu, Alhamdulillah anak saya sehat trs & tmbh pinter & aktif...</span>
-							<span class="full-text" data-id="Semenjak anak saya mengkonsumsi madu hexabrain 760gr 3 thn yg lalu, Alhamdulillah anak saya sehat trs & tmbh pinter & aktif, Sampai skrg anak saya msh minum madu hexabrain pagi & malam." data-en="Since my child consumed hexabrain honey 760gr 3 years ago, Alhamdulillah my child is healthy & smarter & active, Until now my child still drinks hexabrain honey morning & night.">Semenjak anak saya mengkonsumsi madu hexabrain 760gr 3 thn yg lalu, Alhamdulillah anak saya sehat trs & tmbh pinter & aktif, Sampai skrg anak saya msh minum madu hexabrain pagi & malam.</span>
-						</p>
-						<button class="read-more-btn" onclick="toggleTestimonial(this)" data-id="Baca Selengkapnya" data-en="Read More">Baca Selengkapnya</button>
-						<div class="d-flex justify-content-center"><img src="assets/img/testimonial/purnamasari.jpg" class="rounded-circle border border-4 border-warning" style="width: 60px; height: 60px; object-fit: cover;" alt="Client"></div>
-						<h4 class="text-dark" data-id="Purnama Sari" data-en="Purnama Sari">Purnama Sari</h4>
-						<p class="m-0" style="font-size: 12px; color: #666;" data-id="Ibu Rumah Tangga" data-en="Homemaker">Ibu Rumah Tangga</p>
-						<div class="d-flex justify-content-center text-warning stars"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
-					</div>
-					<div class="testimonial-item text-center p-4">
-						<p class="testimonial-text">
-							<span class="short-text" data-id="Yg pernah kebeli kebanyakan paket buat anak sih kak. Alhamdulillah jarang sakit meski sdh ada di lingkungan sekolah..." data-en="I once bought too many packages for my child. Alhamdulillah rarely sick even though already in the school environment...">Yg pernah kebeli kebanyakan paket buat anak sih kak. Alhamdulillah jarang sakit meski sdh ada di lingkungan sekolah...</span>
-							<span class="full-text" data-id="Yg pernah kebeli kebanyakan paket buat anak sih kak. Alhamdulillah jarang sakit meski sdh ada di lingkungan sekolah. Sakitpun cepet sembuhnya. Klo saya, baru bulan kmrn ada miom 2cm. Trs jd rutin minum berka. Nanti klo udh kliatan hasilnya dikabarin ya kak. Lebih percaya sama produk jsr sih jelas kualitasnya." data-en="I once bought too many packages for my child. Alhamdulillah rarely sick even though already in the school environment. Even if sick, recovery is quick. For me, just last month I had a 2cm myoma. Then I started regularly drinking berka. Later when the results are visible, I'll let you know. More confident in JSR products because the quality is clear.">Yg pernah kebeli kebanyakan paket buat anak sih kak. Alhamdulillah jarang sakit meski sdh ada di lingkungan sekolah. Sakitpun cepet sembuhnya. Klo saya, baru bulan kmrn ada miom 2cm. Trs jd rutin minum berka. Nanti klo udh kliatan hasilnya dikabarin ya kak. Lebih percaya sama produk jsr sih jelas kualitasnya.</span>
-						</p>
-						<button class="read-more-btn" onclick="toggleTestimonial(this)" data-id="Baca Selengkapnya" data-en="Read More">Baca Selengkapnya</button>
-						<div class="d-flex justify-content-center"><img src="assets/img/testimonial/nina.jpg" class="rounded-circle border border-4 border-warning" style="width: 60px; height: 60px; object-fit: cover;" alt="Client"></div>
-						<h4 class="text-dark" data-id="Nina" data-en="Nina">Nina</h4>
-						<p class="m-0" style="font-size: 12px; color: #666;" data-id="Karyawan" data-en="Employee">Karyawan</p>
-						<div class="d-flex justify-content-center text-warning stars"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
-					</div>
-					<div class="testimonial-item text-center p-4">
-						<p class="testimonial-text">
-							<span class="short-text" data-id="Udah order ke 5 kalinya, Masya Allah anak saya sehat gak gampang bapil lagi mudahan ada rejeki terus biar bisa co terus." data-en="Already on our 5th order. Masya Allah, my child is healthy and doesn't get coughs and colds as often anymore. Hopefully, we'll always have enough blessings to keep ordering again and again.">Udah order ke 5 kalinya, Masya Allah anak saya sehat gak gampang bapil lagi mudahan ada rejeki terus biar bisa co terus.</span>
-							<span class="full-text" data-id="Udah order ke 5 kalinya, Masya Allah anak saya sehat gak gampang bapil lagi mudahan ada rejeki terus biar bisa co terus." data-en="Already on our 5th order. Masya Allah, my child is healthy and doesn't get coughs and colds as often anymore. Hopefully, we'll always have enough blessings to keep ordering again and again.">Udah order ke 5 kalinya, Masya Allah anak saya sehat gak gampang bapil lagi mudahan ada rejeki terus biar bisa co terus.</span>
-						</p>
-						<div class="d-flex justify-content-center"><img src="assets/img/testimonial/pujiani.png" class="rounded-circle border border-4 border-warning" style="width: 60px; height: 60px; object-fit: cover;" alt="Client"></div>
-						<h4 class="text-dark" data-id="Pujiani" data-en="Pujiani">Pujiani</h4>
-						<p class="m-0" style="font-size: 12px; color: #666;" data-id="Ibu Rumah Tangga" data-en="Homemaker">Ibu Rumah Tangga</p>
-						<div class="d-flex justify-content-center text-warning stars"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
-					</div>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</section>
@@ -1856,17 +2027,19 @@
 					<div class="col-lg col-md-7 col-sm-12">
 						<div class="single_footer">
 							<a href="#home"><img src="assets/img/logo1.png" alt="MaduJSR" class="footer-logo"></a>
-							<p style="color: rgba(255,255,255,.7); line-height: 1.7; margin-top: 10px; font-size: 14px;" data-id="Madu murni pilihan untuk menemani kesehatan keluarga dengan kebaikan alami yang terjaga." data-en="Pure honey choice to accompany family health with preserved natural goodness.">
-								Madu murni pilihan untuk menemani kesehatan keluarga dengan kebaikan alami yang terjaga.
+							<p style="color: rgba(255,255,255,.7); line-height: 1.7; margin-top: 10px; font-size: 14px;"<?= sa('footer_desc') ?>>
+								<?= st('footer_desc') ?>
 							</p>
+							<?php if ($social): ?>
 							<div class="footer-social-inline">
 								<span class="social-label" data-id="IKUTI KAMI DI MEDIA SOSIAL" data-en="FOLLOW US ON SOCIAL MEDIA">IKUTI KAMI DI MEDIA SOSIAL</span>
 								<div>
-									<a href="#" class="social-icon" title="Facebook"><i class="fa fa-facebook"></i></a>
-									<a href="#" class="social-icon" title="Instagram"><i class="fa fa-instagram"></i></a>
-									<a href="#" class="social-icon" title="YouTube"><i class="fa fa-youtube"></i></a>
+									<?php foreach ($social as $label => $s): ?>
+									<a href="<?= e($s[1]) ?>" class="social-icon" title="<?= e($label) ?>" target="_blank" rel="noopener noreferrer"><i class="fa <?= e($s[0]) ?>"></i></a>
+									<?php endforeach; ?>
 								</div>
 							</div>
+							<?php endif; ?>
 						</div>
 					</div>
 					<div class="col-lg col-md-6 col-sm-12">
@@ -1874,12 +2047,9 @@
 							<h4 data-id="PRODUK" data-en="PRODUCTS">PRODUK</h4>
 							<div class="footer_contact">
 								<ul>
-									<li><a href="#madu-multiflora" data-id="Madu Multiflora" data-en="Multiflora Honey">Madu Multiflora</a></li>
-									<li><a href="#madu-sangket"    data-id="Madu Sangket"    data-en="Sangket Honey">Madu Sangket</a></li>
-									<li><a href="#madu-hitam"      data-id="Madu Hitam"      data-en="Black Honey">Madu Hitam</a></li>
-									<li><a href="#madu-hexabrain"  data-id="Madu Hexabrain"  data-en="Hexabrain Honey">Madu Hexabrain</a></li>
-									<li><a href="#madu-gold-jsr"   data-id="Madu Gold JSR"   data-en="Gold JSR Honey">Madu Gold JSR</a></li>
-									<li><a href="#madu-imun"       data-id="Madu Imun"       data-en="Immune Honey">Madu Imun</a></li>
+									<?php foreach ($products as $p): ?>
+									<li><a href="#<?= e($p['slug']) ?>"<?= bia($p['name']['id'], $p['name']['en']) ?>><?= e($p['name']['id']) ?></a></li>
+									<?php endforeach; ?>
 								</ul>
 							</div>
 						</div>
@@ -1890,7 +2060,7 @@
 							<div class="footer_contact">
 								<ul>
 									<li><a href="#info-tentang-kami" data-id="Tentang Kami" data-en="About Us">Tentang Kami</a></li>
-									<li><a href="#info-keunggulan"   data-id="Keunggulan"   data-en="Advantages">Keunggulan</a></li>
+									<li><a href="#why-jsr"   data-id="Keunggulan"   data-en="Advantages">Keunggulan</a></li>
 									<li><a href="#info-faq"          data-id="FAQ"          data-en="FAQ">FAQ</a></li>
 								</ul>
 							</div>
@@ -1902,7 +2072,6 @@
 							<div class="footer_contact">
 								<ul>
 									<li><a href="#bantuan-cara-pemesanan" data-id="Cara Pemesanan" data-en="How to Order">Cara Pemesanan</a></li>
-									<li><a href="#bantuan-pengiriman"     data-id="Pengiriman"     data-en="Shipping">Pengiriman</a></li>
 									<li><a href="#bantuan-hubungi-kami"   data-id="Hubungi Kami"   data-en="Contact Us">Hubungi Kami</a></li>
 								</ul>
 							</div>
@@ -1912,7 +2081,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="footer_copyright">
-							<span class="copyright-text" data-id="© 2026 madujsr.jsrstore.id. Semua hak dilindungi." data-en="© 2026 madujsr.jsrstore.id. All rights reserved.">© Madu JSR. Semua hak dilindungi.</span>
+							<span class="copyright-text"<?= sa('copyright') ?>><?= st('copyright') ?></span>
 							<span class="partof-inline">
 								<span data-id="Bagian dari" data-en="Part of">Bagian dari</span>
 								<a href="https://jsrstore.id" target="_blank" rel="noopener noreferrer" aria-label="JSR Store">
@@ -1941,8 +2110,13 @@
 			<div class="pp-hero">
 				<div class="pp-left">
 					<div class="pp-media">
+						<a href="#" id="ppStoreLink" class="pp-store-badge" target="_blank" rel="noopener noreferrer" aria-label="Lihat di JSR Store">
+							<span class="pp-store-label" data-id="Tersedia di" data-en="Available at">Tersedia di</span>
+							<img src="assets/img/Logo_JSR_Store.png" alt="JSR Store" class="pp-store-logo-img" onerror="this.style.display='none'">
+						</a>
+
 						<button type="button" class="pp-nav prev" id="ppPrev" aria-label="Produk sebelumnya"><i class="fa fa-angle-left"></i></button>
-						<a id="ppImgLink" class="pp-img-link" href="#" data-caption=""><img id="ppImg" src="" alt=""></a>
+						<div id="ppImgLink" class="pp-img-link"><img id="ppImg" src="" alt=""></div>
 						<button type="button" class="pp-nav next" id="ppNext" aria-label="Produk berikutnya"><i class="fa fa-angle-right"></i></button>
 					</div>
 
@@ -1994,7 +2168,7 @@
 
 					<div class="pp-features" id="ppFeatures"></div>
 
-					<img class="img-trace"
+					<img class="img-trace" loading="lazy" decoding="async"
 						 src="https://cdn.shopify.com/s/files/1/0071/9755/6794/files/latestpuretrace.png"
 						 alt="PureTrace Banner">
 
@@ -2008,7 +2182,7 @@
 								<h4 data-id="Supplement Info" data-en="Supplement Info">Supplement Info</h4>
 								<div class="popup-subtitle" data-id="Per-Serving Information" data-en="Per-Serving Information">Per-Serving Information</div>
 								<div class="sf-row">
-									<div class="sf-img"><img src="https://i.ibb.co.com/8nHKmSSx/pngtree-honey-bee-on-a-white-flower-png-image-16573585.png" alt="Product"></div>
+									<div class="sf-img"><img src="https://i.ibb.co.com/8nHKmSSx/pngtree-honey-bee-on-a-white-flower-png-image-16573585.png" alt="Product" loading="lazy" decoding="async"></div>
 									<div class="sf-table">
 										<div class="sf-item"><span data-id="Kalori" data-en="Calories">Kalori</span><strong>70</strong></div>
 										<div class="sf-item"><span data-id="Lemak Total" data-en="Total Fat">Lemak Total</span><strong>0g</strong></div>
@@ -2029,10 +2203,10 @@
 								<h4 data-id="Tested By The Best" data-en="Tested By The Best">Tested By The Best</h4>
 								<div class="popup-subtitle">&nbsp;</div>
 								<div class="cert-grid">
-									<div class="cert-item"><img src="https://i.ibb.co.com/8nHKmSSx/pngtree-honey-bee-on-a-white-flower-png-image-16573585.png" alt="Analytical Labs"></div>
-									<div class="cert-item"><img src="https://i.ibb.co.com/8nHKmSSx/pngtree-honey-bee-on-a-white-flower-png-image-16573585.png" alt="Hill Laboratories"></div>
-									<div class="cert-item"><img src="https://i.ibb.co.com/8nHKmSSx/pngtree-honey-bee-on-a-white-flower-png-image-16573585.png" alt="Halal"></div>
-									<div class="cert-item"><img src="https://i.ibb.co.com/8nHKmSSx/pngtree-honey-bee-on-a-white-flower-png-image-16573585.png" alt="Kosher"></div>
+									<div class="cert-item"><img src="https://i.ibb.co.com/8nHKmSSx/pngtree-honey-bee-on-a-white-flower-png-image-16573585.png" alt="Analytical Labs" loading="lazy" decoding="async"></div>
+									<div class="cert-item"><img src="https://i.ibb.co.com/8nHKmSSx/pngtree-honey-bee-on-a-white-flower-png-image-16573585.png" alt="Hill Laboratories" loading="lazy" decoding="async"></div>
+									<div class="cert-item"><img src="https://i.ibb.co.com/8nHKmSSx/pngtree-honey-bee-on-a-white-flower-png-image-16573585.png" alt="Halal" loading="lazy" decoding="async"></div>
+									<div class="cert-item"><img src="https://i.ibb.co.com/8nHKmSSx/pngtree-honey-bee-on-a-white-flower-png-image-16573585.png" alt="Kosher" loading="lazy" decoding="async"></div>
 								</div>
 							</div>
 						</div>
@@ -2049,7 +2223,7 @@
 		</div>
 
 		<!-- =========================================================
-			 HALAMAN KOSONG (INFORMASI / BANTUAN)
+			 HALAMAN KOSONG (INFORMASI / BANTUAN) — MULTI KONTEN
 		========================================================= -->
 		<div class="product-page image-only" id="emptyPage" role="dialog" aria-modal="true" aria-hidden="true">
 			<div class="product-page-bar">
@@ -2059,6 +2233,40 @@
 				</button>
 				<img src="assets/img/logo1.png" alt="MaduJSR" class="pp-logo" onerror="this.style.display='none'">
 			</div>
+
+			<!-- ==================== HALAMAN: FAQ ==================== -->
+			<?php render_faq_page(); ?>
+
+			<!-- ==================== HALAMAN: TENTANG KAMI ==================== -->
+			<?php render_page('tentang-kami'); ?>
+
+			<!-- ==================== HALAMAN: KEUNGGULAN ==================== -->
+			<div class="empty-page-content" data-page="keunggulan">
+				<div class="container-fluid bg-breadcrumb">
+					<div class="container text-center py-5" style="max-width: 900px;">
+						<h4 class="text-white display-4 mb-4" data-id="Keunggulan" data-en="Advantages">Keunggulan</h4>
+						<ol class="breadcrumb d-flex justify-content-center mb-0">
+							<li class="breadcrumb-item"><a href="#home" data-id="Beranda" data-en="Home">Beranda</a></li>
+							<li class="breadcrumb-item active" data-id="Keunggulan" data-en="Advantages">Keunggulan</li>
+						</ol>
+					</div>
+				</div>
+				<div class="container py-5" style="max-width: 900px;">
+					<ul>
+						<li data-id="Madu murni tanpa tambahan" data-en="Pure honey with no additives">Madu murni tanpa tambahan</li>
+						<li data-id="Kadar enzim diastase 6,78 (SNI: 3)" data-en="Diastase enzyme level 6.78 (SNI: 3)">Kadar enzim diastase 6,78 (SNI: 3)</li>
+						<li data-id="HMF 39,17 (batas maksimal 40)" data-en="HMF 39.17 (maximum limit 40)">HMF 39,17 (batas maksimal 40)</li>
+						<li data-id="Bebas logam berat &amp; kloramfenikol" data-en="Free from heavy metals &amp; chloramphenicol">Bebas logam berat &amp; kloramfenikol</li>
+						<li data-id="Tersertifikasi halal &amp; P-IRT" data-en="Halal certified &amp; P-IRT registered">Tersertifikasi halal &amp; P-IRT</li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- ==================== HALAMAN: CARA PEMESANAN ==================== -->
+			<?php render_page('cara-pemesanan'); ?>
+
+			<!-- ==================== HALAMAN: HUBUNGI KAMI ==================== -->
+			<?php render_page('hubungi-kami'); ?>
 		</div>
 
 		<!-- WHATSAPP CONSULT WIDGET -->
@@ -2066,24 +2274,24 @@
 			<span class="wa-avatar">
 				<span class="wa-circle">
 					<i class="fa fa-user"></i>
-					<img src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%20%3Cdefs%3E%3ClinearGradient%20id='bg'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23fdf3d8'/%3E%3Cstop%20offset='1'%20stop-color='%23f0d9a0'/%3E%3C/linearGradient%3E%3C/defs%3E%20%3Crect%20width='100'%20height='100'%20fill='url(%23bg)'/%3E%20%3Cpath%20d='M14%20100c0-24%2015-32%2036-32s36%208%2036%2032z'%20fill='%238f1d27'/%3E%20%3Cpath%20d='M30%20100c2-14%209-22%2020-22s18%208%2020%2022z'%20fill='%23ffffff'/%3E%20%3Cellipse%20cx='50'%20cy='44'%20rx='27'%20ry='31'%20fill='%23b3262e'/%3E%20%3Cellipse%20cx='50'%20cy='47'%20rx='17'%20ry='20'%20fill='%23f3cfae'/%3E%20%3Ccircle%20cx='43.5'%20cy='46'%20r='1.9'%20fill='%233b2418'/%3E%3Ccircle%20cx='56.5'%20cy='46'%20r='1.9'%20fill='%233b2418'/%3E%20%3Cpath%20d='M44%2056q6%206%2012%200'%20stroke='%23b5524a'%20stroke-width='1.6'%20fill='none'%20stroke-linecap='round'/%3E%20%3Ccircle%20cx='46'%20cy='71'%20r='3'%20fill='%23d9a441'/%3E%20%3C/svg%3E" alt="Customer Service" class="wa-photo" onerror="this.style.display='none'">
+					<img src="<?= e(setting('wa_avatar') ?: 'assets/img/cs/cs.png') ?>" alt="Customer Service" class="wa-photo" onerror="this.style.display='none'">
 				</span>
 				<span class="wa-badge"><i class="fa fa-whatsapp"></i></span>
 			</span>
 			<span class="wa-text">
-				<span class="wa-title" data-id="Ada Pertanyaan?" data-en="Have a Question?">Ada Pertanyaan?</span>
-				<span class="wa-desc" data-id="Klik untuk konsultasi GRATIS sekarang!" data-en="Click for a FREE consultation now!">Klik untuk konsultasi GRATIS sekarang!</span>
+				<span class="wa-title"<?= sa('wa_title') ?>><?= st('wa_title') ?></span>
+				<span class="wa-desc"<?= sa('wa_desc') ?>><?= st('wa_desc') ?></span>
 			</span>
 		</a>
 
 		<!-- FLOATING CTA -->
 		<div class="floating-cta" id="floatingCta">
 			<button class="close-cta" onclick="closeFloatingCta()" aria-label="Tutup"><i class="fa fa-times"></i></button>
-			<a href="https://jsrstore.id/products?category_name=madu" target="_blank" rel="noopener noreferrer" class="floating-btn">
+			<a href="<?= e(setting('cta_link')) ?>" target="_blank" rel="noopener noreferrer" class="floating-btn">
 				<i class="fa fa-shopping-cart"></i>
 				<span class="btn-label">
-					<small data-id="Belanja Sekarang" data-en="Shop Now">Belanja Sekarang</small>
-					<span data-id="Madu Murni JSR" data-en="Pure Madu JSR">Madu Murni JSR</span>
+					<small<?= sa('cta_small') ?>><?= st('cta_small') ?></small>
+					<span<?= sa('cta_main') ?>><?= st('cta_main') ?></span>
 				</span>
 			</a>
 		</div>
@@ -2103,9 +2311,9 @@
 		<script src="assets/aos/aos.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="assets/js/scripts.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
 		<script>
+			window.PRODUCT_HASHES = <?= json_encode(array_keys($product_hash_map), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 			function toggleTestimonial(btn) {
 				var textContainer = btn.previousElementSibling;
 				if (textContainer.classList.contains('show-full')) {
@@ -2126,6 +2334,35 @@
 				localStorage.setItem('floatingCtaClosed', 'true');
 			}
 			document.addEventListener("DOMContentLoaded", function () {
+				// Widget WhatsApp di mobile: tarik ke kiri untuk membuka teks, tarik ke kanan / ketuk di luar untuk menutup
+				(function () {
+					var w = document.querySelector('.wa-consult');
+					if (!w) return;
+					var mq = window.matchMedia('(max-width: 576px)');
+					var sx = null, sy = 0, moved = false, timer = null;
+					function setOpen(o) {
+						w.classList.toggle('open', o);
+						clearTimeout(timer);
+						if (o) timer = setTimeout(function () { w.classList.remove('open'); }, 8000);
+					}
+					w.addEventListener('pointerdown', function (e) { if (!mq.matches) return; sx = e.clientX; sy = e.clientY; moved = false; });
+					w.addEventListener('pointermove', function (e) {
+						if (sx === null || !mq.matches) return;
+						var dx = e.clientX - sx, dy = e.clientY - sy;
+						if (Math.abs(dx) < 18 || Math.abs(dx) < Math.abs(dy)) return;
+						moved = true;
+						if (dx < 0 && !w.classList.contains('open')) setOpen(true);
+						else if (dx > 0 && w.classList.contains('open')) setOpen(false);
+						sx = e.clientX;
+					});
+					function end() { sx = null; }
+					w.addEventListener('pointerup', end);
+					w.addEventListener('pointercancel', function () { sx = null; moved = true; setTimeout(function () { moved = false; }, 300); });
+					w.addEventListener('click', function (e) {
+						if (moved) { e.preventDefault(); moved = false; }
+					});
+					document.addEventListener('pointerdown', function (e) { if (!w.contains(e.target)) setOpen(false); });
+				})();
 				if (typeof AOS !== "undefined") AOS.init({ duration: 800, once: true, offset: 80 });
 				window.addEventListener('scroll', function() {
 					var navbar = document.querySelector('.site-navbar');
@@ -2153,33 +2390,19 @@
 				if (typeof jQuery !== "undefined" && typeof jQuery.fn.owlCarousel !== "undefined") {
 					$(".testimonial-carousel").owlCarousel({
 						autoplay: true, autoplayTimeout: 5000, autoplayHoverPause: true,
-						smartSpeed: 1000, loop: true, margin: 15, nav: false, dots: false,
+						speed: 1000, loop: true, margin: 15, nav: false, dots: false,
 						navText: ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
 						responsive: { 0: { items: 1 }, 768: { items: 2 }, 1200: { items: 3 } }
 					});
 				}
-				if (typeof jQuery !== "undefined" && typeof jQuery.fancybox !== "undefined") {
-					jQuery(document).on('click', '#ppImgLink', function (e) {
-						e.preventDefault();
-						var href = jQuery(this).attr('href');
-						var caption = jQuery(this).attr('data-caption') || '';
-						if (!href || href === '#') return;
-						jQuery.fancybox.open({
-							src: href,
-							opts: { caption: caption, loop: false, smallBtn: true, touch: false,
-								clickContent: 'close', clickSlide: 'close',
-								buttons: ["zoom", "fullScreen"],
-								afterShow: function () { document.body.classList.add('fancybox-active'); },
-								afterClose: function () { document.body.classList.remove('fancybox-active'); }
-							}
-						});
-					});
-				}
 				document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-					if (link.closest('#mobileNav')) return;   // menu mobile ditangani script sendiri
+					if (link.closest('#mobileNav')) return;
 					link.addEventListener("click", function (e) {
 						var h = this.getAttribute("href");
 						if (!h || h.length < 2) return;
+						if (h === '#info-faq' || h === '#info-tentang-kami' || h === '#info-keunggulan' ||
+						    h === '#bantuan-cara-pemesanan' || h === '#bantuan-hubungi-kami') return;
+						if (window.PRODUCT_HASHES && window.PRODUCT_HASHES.indexOf(h) !== -1) return;
 						let target = null;
 						try { target = document.querySelector(h); } catch (err) { return; }
 						if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth", block: "start" }); }
@@ -2193,7 +2416,7 @@
 				const languageOptions = document.querySelectorAll('.language-option');
 				function changeLanguage(lang) {
 					document.querySelectorAll('[data-id][data-en]').forEach(function (el) {
-						if (el.id === 'ppDesc' || el.classList.contains('pp-desc')) {
+						if (el.id === 'ppDesc' || el.classList.contains('pp-desc') || el.hasAttribute('data-html')) {
 							el.innerHTML = (lang === 'en') ? el.getAttribute('data-en') : el.getAttribute('data-id');
 						} else {
 							el.textContent = (lang === 'en') ? el.getAttribute('data-en') : el.getAttribute('data-id');
@@ -2216,7 +2439,6 @@
 					document.documentElement.lang = lang;
 				}
 				document.addEventListener('click', function (e) {
-					/* Toggle bahasa: klik bendera di navbar → langsung ganti bahasa */
 					var toggle = e.target.closest('.language-toggle');
 					if (toggle) {
 						e.preventDefault();
@@ -2224,7 +2446,6 @@
 						changeLanguage(current === 'id' ? 'en' : 'id');
 						return;
 					}
-					/* Pilihan bahasa di menu mobile */
 					var option = e.target.closest('.language-option');
 					if (option) {
 						e.preventDefault();
@@ -2246,8 +2467,6 @@
 				let startX = 0, startY = 0;
 				let isDragging = false, isSwiping = false, isSwipingHorizontal = false;
 				const startDrag = (e) => {
-					if (document.body.classList.contains('fancybox-active')) return;
-					if (document.querySelector('.fancybox-overlay')) return;
 					const clientX = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0;
 					const clientY = e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY) || 0;
 					startX = clientX; startY = clientY;
@@ -2257,8 +2476,6 @@
 				};
 				const moveDrag = (e) => {
 					if (!isDragging) return;
-					if (document.body.classList.contains('fancybox-active')) return;
-					if (document.querySelector('.fancybox-overlay')) return;
 					const clientX = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0;
 					const clientY = e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY) || 0;
 					const diffX = clientX - startX;
@@ -2282,7 +2499,7 @@
 					if (isSwiping && isSwipingHorizontal && Math.abs(diffX) > 50) {
 						if (diffX > 0) carouselInstance.prev();
 						else carouselInstance.next();
-					}
+						}
 					isSwiping = false; isSwipingHorizontal = false;
 				};
 				carouselElement.addEventListener('mousedown', startDrag);
@@ -2298,36 +2515,22 @@
 
 		<script>
 		document.addEventListener('DOMContentLoaded', function () {
-			var PRODUCTS  = <?= json_encode($products, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
-			var DETAILS   = <?= json_encode($details, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
-			var TRUST     = <?= json_encode($trust,   JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+			var PRODUCTS = <?= json_encode($products, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) ?>;
+			var DETAILS = <?= json_encode($details, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) ?>;
+			var TRUST = <?= json_encode($trust, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) ?>;
 
-			/* =========================================================
-			   PEMETAAN HASH ↔ INDEX PRODUK (cara kedua)
-			========================================================= */
-			var HASH_MAP = {
-				'#madu-multiflora': 0,
-				'#madu-sangket':    1,
-				'#madu-hitam':      2,
-				'#madu-hexabrain':  3,
-				'#madu-gold-jsr':   4,
-				'#madu-imun':       5
-			};
+			var HASH_MAP = <?= json_encode($product_hash_map, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 			var HASH_MAP_REVERSE = {};
 			Object.keys(HASH_MAP).forEach(function (k) {
 				HASH_MAP_REVERSE[HASH_MAP[k]] = k;
 			});
 
-			/* =========================================================
-			   PEMETAAN HASH HALAMAN KOSONG (INFORMASI / BANTUAN)
-			========================================================= */
 			var EMPTY_HASHES = {
-				'#info-tentang-kami':      true,
-				'#info-keunggulan':        true,
-				'#info-faq':               true,
-				'#bantuan-cara-pemesanan': true,
-				'#bantuan-pengiriman':     true,
-				'#bantuan-hubungi-kami':   true
+				'#info-tentang-kami':      'tentang-kami',
+				'#info-keunggulan':        'keunggulan',
+				'#info-faq':               'faq',
+				'#bantuan-cara-pemesanan': 'cara-pemesanan',
+				'#bantuan-hubungi-kami':   'hubungi-kami'
 			};
 
 			var page        = document.getElementById('productPage');
@@ -2348,6 +2551,86 @@
 			var ppFunction  = document.getElementById('ppFunction');
 			var ppPrev      = document.getElementById('ppPrev');
 			var ppNext      = document.getElementById('ppNext');
+
+			var ppBadgeEl = document.querySelector('.pp-store-badge');
+			var ppMedia   = document.querySelector('.pp-media');
+			var lastDims  = null;
+
+			var mqContain = window.matchMedia('(max-aspect-ratio: 6/5)');
+			function isContainMode() { return mqContain.matches; }
+
+			function coverRect(cw, ch, nw, nh) {
+				var s = Math.max(cw / nw, ch / nh);
+				var w = nw * s, h = nh * s;
+				return { x: (cw - w) / 2, y: (ch - h) / 2, w: w, h: h };
+			}
+
+			function containRect(cw, ch, nw, nh) {
+				var s = Math.min(cw / nw, ch / nh);
+				var w = nw * s, h = nh * s;
+				return { x: (cw - w) / 2, y: (ch - h) / 2, w: w, h: h };
+			}
+
+			function currentRect(cw, ch, nw, nh) {
+				return isContainMode()
+					? containRect(cw, ch, nw, nh)
+					: coverRect(cw, ch, nw, nh);
+			}
+
+			function readLogoBox() {
+				var cs = getComputedStyle(ppBadgeEl);
+				var b = {};
+				var prefix = isContainMode() ? '--logo-mobile-' : '--logo-';
+				['vw', 'vh', 'x', 'y', 'w', 'h'].forEach(function (k) {
+					b[k] = parseFloat(cs.getPropertyValue(prefix + k));
+				});
+				for (var k in b) { if (!isFinite(b[k]) || b[k] <= 0 && (k === 'vw' || k === 'vh' || k === 'w' || k === 'h')) return null; }
+				return b;
+			}
+
+			function placeStoreBadge() {
+				if (!ppBadgeEl || !ppMedia) return;
+				var anchored = false;
+				var cw = ppMedia.clientWidth, ch = ppMedia.clientHeight;
+				var LOGO_BOX = readLogoBox();
+
+				if (LOGO_BOX && lastDims && lastDims.w && cw && ch && page.classList.contains('image-only')) {
+					var ref = currentRect(LOGO_BOX.vw, LOGO_BOX.vh, lastDims.w, lastDims.h);
+					var fx = (LOGO_BOX.x - ref.x) / ref.w,  fy = (LOGO_BOX.y - ref.y) / ref.h;
+					var fw = LOGO_BOX.w / ref.w,            fh = LOGO_BOX.h / ref.h;
+
+					var cur = currentRect(cw, ch, lastDims.w, lastDims.h);
+					var x = cur.x + fx * cur.w, y = cur.y + fy * cur.h;
+					var w = fw * cur.w,         h = fh * cur.h;
+
+					if (x >= 0 && y >= 0 && x + w <= cw && y + h <= ch) {
+						ppBadgeEl.style.left   = x + 'px';
+						ppBadgeEl.style.top    = y + 'px';
+						ppBadgeEl.style.width  = w + 'px';
+						ppBadgeEl.style.height = h + 'px';
+						ppBadgeEl.style.bottom = 'auto';
+						ppBadgeEl.classList.add('is-anchored');
+						anchored = true;
+					}
+				}
+
+				if (!anchored) {
+					ppBadgeEl.style.left = ppBadgeEl.style.top = ppBadgeEl.style.width =
+					ppBadgeEl.style.height = ppBadgeEl.style.bottom = '';
+					ppBadgeEl.classList.remove('is-anchored');
+				}
+				ppBadgeEl.classList.add('placed');
+			}
+
+			window.addEventListener('resize', function () {
+				if (ppBadgeEl && ppBadgeEl.classList.contains('placed')) placeStoreBadge();
+			});
+			if (mqContain.addEventListener) mqContain.addEventListener('change', function () {
+				if (ppBadgeEl && ppBadgeEl.classList.contains('placed')) placeStoreBadge();
+			});
+			else if (mqContain.addListener) mqContain.addListener(function () {
+				if (ppBadgeEl && ppBadgeEl.classList.contains('placed')) placeStoreBadge();
+			});
 
 			var carouselEl  = document.getElementById('productHeroCarousel');
 			var slides      = Array.prototype.slice.call(carouselEl.querySelectorAll('.carousel-item'));
@@ -2400,22 +2683,65 @@
 				});
 			}
 
+			var imgLoadToken = 0;
+			function loadDetailImage(src, alt) {
+				imgLoadToken++;
+				var myToken = imgLoadToken;
+
+				ppImg.classList.add('is-loading');
+				ppBadgeEl.classList.remove('placed');
+
+				var pre = new Image();
+				pre.onload = function () {
+					if (myToken !== imgLoadToken) return;
+					lastDims = { w: pre.naturalWidth, h: pre.naturalHeight };
+					placeStoreBadge();
+					ppImg.src = src;
+					ppImg.alt = alt;
+					if (ppImg.decode) {
+						ppImg.decode().then(function () {
+							if (myToken !== imgLoadToken) return;
+							ppImg.classList.remove('is-loading');
+						}).catch(function () {
+							ppImg.classList.remove('is-loading');
+						});
+					} else {
+						requestAnimationFrame(function () {
+							if (myToken !== imgLoadToken) return;
+							ppImg.classList.remove('is-loading');
+						});
+					}
+				};
+				pre.onerror = function () {
+					if (myToken !== imgLoadToken) return;
+					lastDims = null;
+					placeStoreBadge();
+					ppImg.src = src;
+					ppImg.alt = alt;
+					ppImg.classList.remove('is-loading');
+				};
+				pre.src = src;
+			}
+
 			function fill(i) {
 				var s = slides[i];
 				var p = PRODUCTS[i];
 				var d = DETAILS[i];
 
-				var imgSrc = (p.detail_img && p.detail_img !== '')
-					? p.detail_img
-					: s.querySelector('.product-image-wrapper img').getAttribute('src');
+				var useImageOnly = !!(d && d.is_image_only);
+				var carouselImgSrc = s.querySelector('.product-image-wrapper img').getAttribute('src');
+				var isMobilePortrait = isContainMode();
+				var imgSrc = (useImageOnly && isMobilePortrait && p.mobile_detail_img)
+					? p.mobile_detail_img
+					: ((useImageOnly && p.detail_img && p.detail_img !== '')
+						? p.detail_img
+						: carouselImgSrc);
 				var imgAlt = s.querySelector('.product-image-wrapper img').alt;
 
-				ppImg.src = imgSrc;
-				ppImg.alt = imgAlt;
-				ppImgLink.setAttribute('href', imgSrc);
+				loadDetailImage(imgSrc, imgAlt);
+
 				ppImgLink.dataset.captionId = p.name.id;
 				ppImgLink.dataset.captionEn = p.name.en;
-				ppImgLink.setAttribute('data-caption', (curLang() === 'en') ? p.name.en : p.name.id);
 
 				var badgeSpan = ppBadge.querySelector('span[data-id]');
 				if (badgeSpan && p.badge) setBi(badgeSpan, p.badge);
@@ -2448,13 +2774,54 @@
 				renderList(ppTrust, TRUST);
 				ppBuy2.href = p.link || '#';
 
-				if (d && d.is_image_only) {
+				if (p.link) {
+					ppBadgeEl.href = p.link;
+					ppBadgeEl.title = (curLang() === 'en') ? 'Buy at JSR Store' : 'Beli di JSR Store';
+					ppBadgeEl.setAttribute('aria-label', ppBadgeEl.title);
+				} else {
+					ppBadgeEl.removeAttribute('href');
+				}
+
+				if (useImageOnly) {
 					page.classList.add('image-only');
 				} else {
 					page.classList.remove('image-only');
 				}
 
 				currentIndex = i;
+
+				PRODUCTS.forEach(function (q) { if (q.logo_class) ppBadgeEl.classList.remove(q.logo_class); });
+				if (p.logo_class) ppBadgeEl.classList.add(p.logo_class);
+
+				/* Posisi logo per produk (diatur di CMS > Produk). Menimpa nilai dari kelas CSS di atas. */
+				var LG = p.logo;
+				if (LG && LG.w > 0 && LG.h > 0) {
+					var st = ppBadgeEl.style;
+					st.setProperty('--logo-vw', '1918'); st.setProperty('--logo-vh', '876');
+					st.setProperty('--logo-x', LG.x);   st.setProperty('--logo-y', LG.y);
+					st.setProperty('--logo-w', LG.w);   st.setProperty('--logo-h', LG.h);
+					st.setProperty('--logo-mobile-vw', '375'); st.setProperty('--logo-mobile-vh', '667');
+					st.setProperty('--logo-mobile-x', '150');  st.setProperty('--logo-mobile-y', '610');
+					st.setProperty('--logo-mobile-w', '75');   st.setProperty('--logo-mobile-h', '52');
+				}
+			}
+
+			/* =========================================================
+			   RESET FAQ: semua item tertutup (hanya faq-acc-head tampil)
+			========================================================= */
+			function resetFaq() {
+				emptyPage.querySelectorAll('.faq-acc-item').forEach(function (it) {
+					it.classList.remove('open');
+				});
+			}
+
+			function showEmptyContent(pageName) {
+				emptyPage.querySelectorAll('.empty-page-content').forEach(function (el) {
+					el.classList.toggle('active', el.dataset.page === pageName);
+				});
+				/* Setiap buka halaman kosong, FAQ direset tertutup semua */
+				resetFaq();
+				emptyPage.scrollTop = 0;
 			}
 
 			function openPage(i) {
@@ -2480,8 +2847,9 @@
 				if (inst) inst.cycle();
 			}
 
-			function openEmpty() {
+			function openEmpty(pageName) {
 				closePage();
+				showEmptyContent(pageName);
 				emptyPage.classList.add('open');
 				emptyPage.setAttribute('aria-hidden', 'false');
 				document.body.style.overflow = 'hidden';
@@ -2497,14 +2865,12 @@
 				if (inst) inst.cycle();
 			}
 
-			/* =========================================================
-			   ROUTE — pakai HASH_MAP (nama madu) + EMPTY_HASHES
-			========================================================= */
 			function route() {
 				var hash = location.hash;
 
-				if (EMPTY_HASHES[hash]) {
-					openEmpty();
+				var emptyPageName = EMPTY_HASHES[hash];
+				if (emptyPageName) {
+					openEmpty(emptyPageName);
 					return;
 				}
 				if (emptyPage.classList.contains('open')) {
@@ -2530,6 +2896,18 @@
 					h.setAttribute('aria-expanded', open ? 'true' : 'false');
 				});
 			});
+
+			emptyPage.querySelectorAll('.faq-acc-head').forEach(function (h) {
+				h.addEventListener('click', function () {
+					var item = h.parentNode;
+					var willOpen = !item.classList.contains('open');
+					emptyPage.querySelectorAll('.faq-acc-item').forEach(function (it) {
+						it.classList.remove('open');
+					});
+					if (willOpen) item.classList.add('open');
+				});
+			});
+
 			ppBack.addEventListener('click', function () {
 				if (openedByClick) {
 					openedByClick = false;
@@ -2563,6 +2941,8 @@
 				if (e.key === 'ArrowLeft' && !page.classList.contains('image-only')) ppPrev.click();
 				if (e.key === 'ArrowRight' && !page.classList.contains('image-only')) ppNext.click();
 			});
+
+			resetFaq();   /* loading pertama: semua FAQ tertutup, hanya faq-acc-head yang tampil */
 			window.addEventListener('hashchange', route);
 			route();
 		});
@@ -2613,7 +2993,7 @@
 						return;
 					}
 					var a = tg.closest('a[href^="#"]');
-					if (!a) return;                         // pilihan bahasa dibiarkan lewat
+					if (!a) return;
 					var h = a.getAttribute('href');
 					var t = null;
 					try { t = h.length > 1 ? document.querySelector(h) : null; } catch (err) {}

@@ -1,0 +1,10 @@
+# madujsr-uploads v2
+# Folder unggahan: file script tidak boleh dijalankan.
+<IfModule mod_mime.c>
+  RemoveHandler .php .phtml .phar .php3 .php4 .php5 .php7 .php8
+  RemoveType .php .phtml .phar .php3 .php4 .php5 .php7 .php8
+</IfModule>
+<FilesMatch "\.(php|phtml|phar|php[0-9])$">
+  ForceType text/plain
+  SetHandler default-handler
+</FilesMatch>
