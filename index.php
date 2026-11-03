@@ -706,6 +706,8 @@
 				max-height: 42px; width: auto; transition: max-height 0.25s ease;
 			}
 			.site-logo .logo-scroll-img, .site-logo .logo-scroll-text { display: none; }
+			.site-logo[data-scroll-logo="image"] a::before, .site-logo[data-scroll-logo="image"] a::after,
+			.site-logo[data-scroll-logo="text"] a::before, .site-logo[data-scroll-logo="text"] a::after { content: none !important; display: none !important; }   /* tulisan bawaan template lewat CSS dimatikan bila logo scroll diatur di CMS */
 			.site-logo .logo-scroll-text { font-weight: 800; font-size: 24px; letter-spacing: .5px; line-height: 1; }
 			.site-navbar.sticky .site-logo[data-scroll-logo="image"] .logo-main,
 			.site-navbar.sticky .site-logo[data-scroll-logo="text"] .logo-main { display: none; }
@@ -2368,7 +2370,21 @@
 					var navbar = document.querySelector('.site-navbar');
 					if (window.scrollY > 80) navbar.classList.add('sticky');
 					else navbar.classList.remove('sticky');
+					window.addEventListener('resize', swapScrollLogo);
+				swapScrollLogo();
 				});
+				function swapScrollLogo() {
+					var nb = document.querySelector('.site-navbar'), lg = document.querySelector('.site-logo');
+					if (!nb || !lg) return;
+					var mode = lg.getAttribute('data-scroll-logo'), on = nb.classList.contains('sticky');
+					var main = lg.querySelector('.logo-main'), alt = lg.querySelector(mode === 'text' ? '.logo-scroll-text' : '.logo-scroll-img');
+					if (!alt || (mode !== 'image' && mode !== 'text')) return;
+					if (!on && mode === 'image') { var r = main.getBoundingClientRect(); if (r.height > 0) lg._h = r.height; }
+					if (mode === 'image' && lg._h) { alt.style.setProperty('height', lg._h + 'px', 'important'); alt.style.setProperty('max-height', 'none', 'important'); alt.style.setProperty('width', 'auto', 'important'); }
+					main.style.setProperty('display', on ? 'none' : '', on ? 'important' : '');
+					alt.style.setProperty('display', on ? 'inline-block' : 'none', 'important');
+				}
+				swapScrollLogo();
 				var floatingCta = document.getElementById('floatingCta');
 				var whySection = document.getElementById('why-jsr');
 				var isCtaClosed = localStorage.getItem('floatingCtaClosed') === 'true';
