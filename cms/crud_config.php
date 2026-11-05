@@ -147,7 +147,7 @@ function cms_entities(): array
                     'text'  => 'Nama saja (tanpa foto)',
                 ], 'help' => 'Foto yang kosong otomatis tampil nama saja; "Nama saja" memaksa foto disembunyikan.']),
                 fld('photo', 'Foto', 'image', ['help' => 'Dipakai bila tampilan "Foto + nama". Kosong = tampil nama dan profesi saja.']),
-                fld('stars', 'Bintang (1-5)', 'number', ['default' => 5, 'min' => 1, 'max' => 5]),
+                fld('stars', 'Rating bintang', 'rating', ['default' => 5, 'min' => 1, 'max' => 5, 'help' => 'Klik bintang untuk memilih rating.']),
             ],
         ],
 

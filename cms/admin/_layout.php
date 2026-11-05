@@ -80,6 +80,7 @@ h3.group:first-child{margin-top:0}
 .lp-info{font-size:12.5px;color:var(--muted);margin-top:6px}
 .lp [hidden]{display:none!important}
 .tp-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.rate{display:flex;align-items:center;gap:4px}.rate-s{background:none;border:0;padding:0 2px;font-size:34px;line-height:1;color:#d8d0c0;cursor:pointer;transition:transform .12s,color .12s}.rate-s.on{color:#E9B949}.rate-s:hover{transform:scale(1.15)}.rate-t{margin-left:10px;color:#7a6e5d;font-size:14px}
 .tp-tab.active{background:var(--brand,#c8951a);color:#fff;border-color:transparent}
 .tp-wrap{width:100%}
 .tp{position:relative;overflow:hidden;background:#2b2620 center/cover no-repeat;border-radius:12px;cursor:crosshair;touch-action:none;user-select:none;max-width:100%}

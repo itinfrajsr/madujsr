@@ -99,6 +99,7 @@ function cms_collect_fields(array $fields, array $post, array $files, ?array $ex
                 break;
 
             case 'number':
+            case 'rating':
                 $s = trim($raw);
                 if ($s === '') { $v = $f['default'] ?? 0; break; }
                 if (!is_numeric($s)) { $err[] = "$label harus berupa angka."; $v = 0; break; }
@@ -190,6 +191,21 @@ function cms_render_field(array $f, $val, bool $isEdit): string
             if (isset($f['min'])) $attrs .= ' min="' . (float)$f['min'] . '"';
             if (isset($f['max'])) $attrs .= ' max="' . (float)$f['max'] . '"';
             return '<div class="field">' . $label . '<input type="number" step="any" id="' . $id . '" name="' . e($n) . '" value="' . e($val) . '"' . $attrs . '>' . $help . '</div>';
+
+        case 'rating':
+            $max = max(1, (int)($f['max'] ?? 5));
+            $cur = (int)$val; if ($cur < 1) $cur = (int)($f['default'] ?? $max);
+            $h = '<div class="field">' . $label . '<div class="rate" id="' . $id . '_r" role="radiogroup" aria-label="' . e($f['label']) . '">'
+               . '<input type="hidden" id="' . $id . '" name="' . e($n) . '" value="' . $cur . '">';
+            for ($i = 1; $i <= $max; $i++) {
+                $h .= '<button type="button" class="rate-s" data-v="' . $i . '" aria-label="' . $i . ' bintang">&#9733;</button>';
+            }
+            $h .= '<span class="rate-t" id="' . $id . '_t"></span></div>' . $help
+               . '<script>(function(){var w=document.getElementById("' . $id . '_r"),inp=document.getElementById("' . $id . '"),t=document.getElementById("' . $id . '_t"),bs=w.querySelectorAll(".rate-s"),hov=0;'
+               . 'function paint(){var v=hov||+inp.value||0;bs.forEach(function(b){b.classList.toggle("on",+b.dataset.v<=v)});t.textContent=(+inp.value||0)+" / ' . $max . '";}'
+               . 'bs.forEach(function(b){b.addEventListener("click",function(){inp.value=b.dataset.v;paint()});b.addEventListener("mouseenter",function(){hov=+b.dataset.v;paint()});});'
+               . 'w.addEventListener("mouseleave",function(){hov=0;paint()});paint();})();</script></div>';
+            return $h;
 
         case 'bool':
             return '<div class="field"><label class="check"><input type="checkbox" id="' . $id . '" name="' . e($n) . '" value="1"' . ($val === '1' ? ' checked' : '') . '> ' . e($f['label']) . '</label>' . $help . '</div>';
