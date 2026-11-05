@@ -40,10 +40,24 @@ function cms_upload_image(array $file): ?string
     cms_upload_guard(UPLOAD_DIR);
 
     $name = date('Ymd-His') . '-' . bin2hex(random_bytes(4)) . '.' . $map[$info['mime']];
-    $moved = !empty($file['b64'])
-        ? (@rename($file['tmp_name'], UPLOAD_DIR . '/' . $name) || (@copy($file['tmp_name'], UPLOAD_DIR . '/' . $name) && @unlink($file['tmp_name'])))
-        : move_uploaded_file($file['tmp_name'], UPLOAD_DIR . '/' . $name);
-    if (!$moved) throw new RuntimeException('Gagal menyimpan file unggahan.');
+    $dest = UPLOAD_DIR . '/' . $name;
+    if (!is_writable(UPLOAD_DIR)) @chmod(UPLOAD_DIR, 0755);
+    if (!is_writable(UPLOAD_DIR)) @chmod(UPLOAD_DIR, 0777);
+    if (!empty($file['b64'])) {
+        $moved = @rename($file['tmp_name'], $dest);
+        if (!$moved) {
+            $moved = @copy($file['tmp_name'], $dest);
+            if (!$moved) { $d = @file_get_contents($file['tmp_name']); $moved = $d !== false && @file_put_contents($dest, $d) !== false; }
+            if ($moved) @unlink($file['tmp_name']);
+        }
+    } else {
+        $moved = move_uploaded_file($file['tmp_name'], $dest);
+    }
+    if (!$moved) {
+        $why = !is_writable(UPLOAD_DIR) ? 'folder "' . UPLOAD_URL . '" tidak bisa ditulis (atur izin folder uploads ke 755/775 lewat File Manager)'
+             : (!is_file($file['tmp_name']) ? 'file sementara hilang' : 'penyimpanan penuh atau dibatasi hosting');
+        throw new RuntimeException('Gagal menyimpan file unggahan: ' . $why . '.');
+    }
     @chmod(UPLOAD_DIR . '/' . $name, 0644);
     return UPLOAD_URL . '/' . $name;
 }
@@ -335,6 +349,12 @@ document.addEventListener("DOMContentLoaded", function () {
     var box = document.getElementById("lp"), img = document.getElementById("lpImg"),
         empty = document.getElementById("lpEmpty"), logo = document.getElementById("lpLogo"),
         info = document.getElementById("lpInfo");
+    var sl = document.querySelector("[name=store_logo]");
+    function syncStoreLogo() {
+        var v = sl ? sl.value.trim() : "";
+        if (v) logo.src = /^(https?:|data:)/i.test(v) ? v : "../../" + v.replace(/^\//, "");
+    }
+    if (sl) { sl.addEventListener("input", syncStoreLogo); sl.addEventListener("change", syncStoreLogo); syncStoreLogo(); }
     var F = {x: document.getElementById("f_logo_x"), y: document.getElementById("f_logo_y"),
              w: document.getElementById("f_logo_w"), h: document.getElementById("f_logo_h")};
     var src = document.getElementById("f_detail_img");

@@ -2013,8 +2013,8 @@
 							<span class="full-text"<?= bia($t['full']['id'], $t['full']['en']) ?>><?= e($t['full']['id']) ?></span>
 						</p>
 						<?php if ($t['long']): ?><button class="read-more-btn" onclick="toggleTestimonial(this)" data-id="Baca Selengkapnya" data-en="Read More">Baca Selengkapnya</button><?php endif; ?>
-						<div class="d-flex justify-content-center"><img src="<?= e($t['photo']) ?>" class="rounded-circle border border-4 border-warning" style="width: 60px; height: 60px; object-fit: cover;" alt="<?= e($t['name']) ?>" loading="lazy" decoding="async"></div>
-						<h4 class="text-dark"><?= e($t['name']) ?></h4>
+						<?php if ($t['show_photo']): ?><div class="d-flex justify-content-center"><img src="<?= e($t['photo']) ?>" class="rounded-circle border border-4 border-warning" style="width: 60px; height: 60px; object-fit: cover;" alt="<?= e($t['name']) ?>" loading="lazy" decoding="async"></div><?php endif; ?>
+						<h4 class="text-dark"<?= !$t['show_photo'] ? ' style="margin-top:6px"' : '' ?>><?= e($t['name']) ?></h4>
 						<p class="m-0" style="font-size: 12px; color: #666;"<?= bia($t['role']['id'], $t['role']['en']) ?>><?= e($t['role']['id']) ?></p>
 						<div class="d-flex justify-content-center text-warning stars"><?php for ($s = 0; $s < $t['stars']; $s++): ?><i class="fa fa-star"></i><?php endfor; ?></div>
 					</div>
@@ -2806,6 +2806,10 @@
 
 				currentIndex = i;
 
+				var ppLogoImg = ppBadgeEl.querySelector('.pp-store-logo-img');
+				if (ppLogoImg && p.store_logo) {
+					if (ppLogoImg.getAttribute('src') !== p.store_logo) { ppLogoImg.style.display = ''; ppLogoImg.setAttribute('src', p.store_logo); }
+				}
 				PRODUCTS.forEach(function (q) { if (q.logo_class) ppBadgeEl.classList.remove(q.logo_class); });
 				if (p.logo_class) ppBadgeEl.classList.add(p.logo_class);
 

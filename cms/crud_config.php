@@ -68,6 +68,8 @@ function cms_entities(): array
                 fld('mobile_detail_img', 'Gambar halaman detail (mobile, opsional)', 'image'),
                 fld('is_image_only', 'Halaman detail hanya berupa gambar penuh', 'bool', ['default' => 1,
                     'help' => 'Aktif = detail produk tampil sebagai poster/gambar penuh (seperti sekarang). Nonaktif = tampil dengan teks, fitur, dan akordeon.']),
+                fld('store_logo', 'Gambar tombol "Tersedia di" (logo JSR Store)', 'image', [
+                    'help' => 'Unggah gambar tombol yang tampil di poster detail produk. Kosong = logo JSR Store bawaan. Atur posisinya di bawah.']),
                 fld('logo_picker', 'Posisi logo JSR Store', 'logopicker', ['virtual' => 1,
                     'help' => 'Klik atau seret pada gambar untuk menaruh logo tepat di slot yang kosong pada poster. Pratinjau mengikuti layar desktop (1918x876).']),
                 fld('logo_x', 'Logo: posisi X', 'number', ['default' => 985, 'step' => 1]),
@@ -131,7 +133,7 @@ function cms_entities(): array
         'testimonials' => [
             'label' => 'Testimoni', 'singular' => 'testimoni', 'table' => 'testimonials',
             'title_field' => 'name',
-            'list' => ['photo' => ['Foto', 'image'], 'name' => ['Nama', 'text'], 'role_id' => ['Profesi', 'text'], 'text_id' => ['Testimoni', 'text']],
+            'list' => ['photo' => ['Foto', 'image'], 'name' => ['Nama', 'text'], 'avatar_mode' => ['Tampilan', 'text'], 'role_id' => ['Profesi', 'text'], 'text_id' => ['Testimoni', 'text']],
             'sortable' => true, 'has_active' => true, 'can_create' => true, 'can_delete' => true,
             'fields' => [
                 fld('name', 'Nama', 'text', ['required' => 1]),
@@ -140,7 +142,11 @@ function cms_entities(): array
                 fld('text_id', 'Testimoni (ID)', 'textarea', ['required' => 1, 'rows' => 5,
                     'help' => 'Teks panjang otomatis dipotong dengan tombol "Baca Selengkapnya".']),
                 fld('text_en', 'Testimoni (EN)', 'textarea', ['rows' => 5]),
-                fld('photo', 'Foto', 'image'),
+                fld('avatar_mode', 'Tampilan pengirim', 'select', ['default' => 'photo', 'options' => [
+                    'photo' => 'Foto + nama',
+                    'text'  => 'Nama saja (tanpa foto)',
+                ], 'help' => 'Foto yang kosong otomatis tampil nama saja; "Nama saja" memaksa foto disembunyikan.']),
+                fld('photo', 'Foto', 'image', ['help' => 'Dipakai bila tampilan "Foto + nama". Kosong = tampil nama dan profesi saja.']),
                 fld('stars', 'Bintang (1-5)', 'number', ['default' => 5, 'min' => 1, 'max' => 5]),
             ],
         ],

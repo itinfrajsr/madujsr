@@ -77,6 +77,7 @@ function cms_load_products(): array
             'desc'              => cms_bi($r, 'desc'),
             'features'          => $features,
             'link'              => $r['link'],
+            'store_logo'        => trim((string)($r['store_logo'] ?? '')) !== '' ? $r['store_logo'] : 'assets/img/Logo_JSR_Store.png',
             'logo_class'        => $r['logo_class'],
             'logo'              => cms_logo_for($r),
         ];
@@ -124,7 +125,8 @@ function cms_load_testimonials(): array
             'full'     => ['id' => $tid, 'en' => $ten],
             'short'    => ['id' => $sid, 'en' => $sen],
             'long'     => $long,
-            'photo'    => $r['photo'] !== '' ? $r['photo'] : 'assets/img/logo1.png',
+            'show_photo' => ($r['avatar_mode'] ?? 'photo') !== 'text' && trim((string)$r['photo']) !== '',
+            'photo'    => $r['photo'],
             'stars'    => max(1, min(5, (int)$r['stars'])),
         ];
     }
