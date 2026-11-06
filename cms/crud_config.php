@@ -71,11 +71,15 @@ function cms_entities(): array
                 fld('store_logo', 'Gambar tombol "Tersedia di" (logo JSR Store)', 'image', [
                     'help' => 'Unggah gambar tombol yang tampil di poster detail produk. Kosong = logo JSR Store bawaan. Atur posisinya di bawah.']),
                 fld('logo_picker', 'Posisi logo JSR Store', 'logopicker', ['virtual' => 1,
-                    'help' => 'Klik atau seret pada gambar untuk menaruh logo tepat di slot yang kosong pada poster. Pratinjau mengikuti layar desktop (1918x876).']),
+                    'help' => 'Klik atau seret pada gambar untuk menaruh tombol tepat di slot yang kosong pada poster. Tab Desktop memakai acuan 1918x876, tab HP memakai acuan 375x667 dan gambar detail mobile (bila kosong, memakai gambar desktop).']),
                 fld('logo_x', 'Logo: posisi X', 'number', ['default' => 985, 'step' => 1]),
                 fld('logo_y', 'Logo: posisi Y', 'number', ['default' => 500, 'step' => 1]),
                 fld('logo_w', 'Logo: lebar', 'number', ['default' => 86, 'step' => 1]),
                 fld('logo_h', 'Logo: tinggi', 'number', ['default' => 101, 'step' => 1]),
+                fld('logo_x_m', 'Logo HP: posisi X', 'number', ['default' => 150, 'step' => 1]),
+                fld('logo_y_m', 'Logo HP: posisi Y', 'number', ['default' => 610, 'step' => 1]),
+                fld('logo_w_m', 'Logo HP: lebar', 'number', ['default' => 75, 'step' => 1]),
+                fld('logo_h_m', 'Logo HP: tinggi', 'number', ['default' => 52, 'step' => 1]),
                 fld('logo_class', 'Preset posisi lama (opsional)', 'select', ['options' => $logoClass, 'default' => '',
                     'help' => 'Hanya dipakai bila X/Y/lebar/tinggi di atas kosong (0). Abaikan untuk produk baru.']),
 

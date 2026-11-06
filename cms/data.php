@@ -80,6 +80,7 @@ function cms_load_products(): array
             'store_logo'        => trim((string)($r['store_logo'] ?? '')) !== '' ? $r['store_logo'] : 'assets/img/Logo_JSR_Store.png',
             'logo_class'        => $r['logo_class'],
             'logo'              => cms_logo_for($r),
+            'logo_m'            => ['x' => (float)($r['logo_x_m'] ?? 150), 'y' => (float)($r['logo_y_m'] ?? 610), 'w' => max(1, (float)($r['logo_w_m'] ?? 75)), 'h' => max(1, (float)($r['logo_h_m'] ?? 52))],
         ];
 
         $fn = [];

@@ -77,6 +77,7 @@ h3.group:first-child{margin-top:0}
 .lp>img#lpImg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
 .lp-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#d8cfb8;text-align:center;padding:16px;font-size:14px}
 .lp-logo{position:absolute;object-fit:contain;outline:2px dashed #ff5a4d;outline-offset:1px;pointer-events:none;background:rgba(255,255,255,.15)}
+.lp.m{aspect-ratio:375/667;max-width:340px}.lp.m>img#lpImg{object-fit:contain}
 .lp-info{font-size:12.5px;color:var(--muted);margin-top:6px}
 .lp [hidden]{display:none!important}
 .tp-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}

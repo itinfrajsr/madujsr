@@ -355,64 +355,83 @@ function cms_logo_picker_html(): string
     static $n = 0;
     if ($n++) return '';
     $logo = 'assets/img/Logo_JSR_Store.png';
-    return '<div class="lp" id="lp"><img id="lpImg" alt="" hidden>'
-        . '<div class="lp-empty" id="lpEmpty">Isi <b>Gambar halaman detail (desktop)</b> di atas untuk melihat pratinjau.</div>'
+    return '<div class="tp-tabs" id="lpTabs"><button type="button" class="btn ghost sm tp-tab active" data-m="d">Desktop</button> '
+        . '<button type="button" class="btn ghost sm tp-tab" data-m="m">HP (mobile)</button></div>'
+        . '<div class="lp" id="lp"><img id="lpImg" alt="" hidden>'
+        . '<div class="lp-empty" id="lpEmpty">Isi <b>Gambar halaman detail</b> di atas untuk melihat pratinjau.</div>'
         . '<img id="lpLogo" class="lp-logo" alt="Logo" src="../../' . e($logo) . '" draggable="false"></div>'
         . '<div class="lp-info" id="lpInfo"></div>'
         . '<script>
 document.addEventListener("DOMContentLoaded", function () {
-    var REF_W = 1918, REF_H = 876;
+    var REF = {d: [1918, 876], m: [375, 667]}, DEF = {d: [86, 101], m: [75, 52]};
+    var mode = "d";
     var box = document.getElementById("lp"), img = document.getElementById("lpImg"),
         empty = document.getElementById("lpEmpty"), logo = document.getElementById("lpLogo"),
-        info = document.getElementById("lpInfo");
+        info = document.getElementById("lpInfo"), tabs = document.querySelectorAll("#lpTabs .tp-tab");
     var sl = document.querySelector("[name=store_logo]");
     function syncStoreLogo() {
         var v = sl ? sl.value.trim() : "";
         if (v) logo.src = /^(https?:|data:)/i.test(v) ? v : "../../" + v.replace(/^\//, "");
     }
     if (sl) { sl.addEventListener("input", syncStoreLogo); sl.addEventListener("change", syncStoreLogo); syncStoreLogo(); }
-    var F = {x: document.getElementById("f_logo_x"), y: document.getElementById("f_logo_y"),
-             w: document.getElementById("f_logo_w"), h: document.getElementById("f_logo_h")};
-    var src = document.getElementById("f_detail_img");
-    var fileIn = document.querySelector("input[name=detail_img__file]");
-    if (!box || !F.x || !F.y || !F.w || !F.h) return;
+    function g(id) { return document.getElementById(id); }
+    var F = {d: {x: g("f_logo_x"), y: g("f_logo_y"), w: g("f_logo_w"), h: g("f_logo_h")},
+             m: {x: g("f_logo_x_m"), y: g("f_logo_y_m"), w: g("f_logo_w_m"), h: g("f_logo_h_m")}};
+    var S = {d: {t: g("f_detail_img"), f: document.querySelector("input[name=detail_img__file]")},
+             m: {t: g("f_mobile_detail_img"), f: document.querySelector("input[name=mobile_detail_img__file]")}};
+    if (!box || !F.d.x || !F.d.y || !F.d.w || !F.d.h) return;
+    var blob = {d: "", m: ""};
 
-    function num(el, d) { var v = parseFloat(el.value); return isFinite(v) ? v : d; }
+    function num(el, d) { var v = el ? parseFloat(el.value) : NaN; return isFinite(v) ? v : d; }
     function draw() {
-        var s = box.clientWidth / REF_W;
-        var x = num(F.x, 0), y = num(F.y, 0), w = Math.max(1, num(F.w, 86)), h = Math.max(1, num(F.h, 101));
+        var R = REF[mode], f = F[mode], s = box.clientWidth / R[0];
+        var x = num(f.x, 0), y = num(f.y, 0), w = Math.max(1, num(f.w, DEF[mode][0])), h = Math.max(1, num(f.h, DEF[mode][1]));
         logo.style.left = x * s + "px"; logo.style.top = y * s + "px";
         logo.style.width = w * s + "px"; logo.style.height = h * s + "px";
-        info.textContent = "X " + Math.round(x) + " · Y " + Math.round(y) + " · " + Math.round(w) + " × " + Math.round(h) + " px (acuan 1918 × 876)";
+        info.textContent = "X " + Math.round(x) + " · Y " + Math.round(y) + " · " + Math.round(w) + " × " + Math.round(h) + " px (acuan " + R[0] + " × " + R[1] + ")";
     }
-    function setImg(u) {
+    function urlOf(v) { v = (v || "").trim(); return !v ? "" : (/^https?:\/\//i.test(v) ? v : "../../" + v.replace(/ /g, "%20")); }
+    function curSrc() {
+        if (mode === "m") return blob.m || urlOf(S.m.t && S.m.t.value) || blob.d || urlOf(S.d.t && S.d.t.value);
+        return blob.d || urlOf(S.d.t && S.d.t.value);
+    }
+    function showImg() {
+        var u = curSrc();
         if (!u) { img.hidden = true; empty.hidden = false; return; }
         img.src = u; img.hidden = false; empty.hidden = true;
     }
-    function fromText() {
-        var v = (src.value || "").trim();
-        setImg(!v ? "" : (/^https?:\/\//i.test(v) ? v : "../../" + v.replace(/ /g, "%20")));
-    }
-    if (src) { src.addEventListener("change", fromText); src.addEventListener("input", fromText); fromText(); }
-    if (fileIn) fileIn.addEventListener("change", function () {
-        if (fileIn.files && fileIn.files[0]) setImg(URL.createObjectURL(fileIn.files[0]));
+    ["d", "m"].forEach(function (k) {
+        var t = S[k].t, f = S[k].f;
+        if (t) { t.addEventListener("change", showImg); t.addEventListener("input", showImg); }
+        if (f) f.addEventListener("change", function () {
+            blob[k] = (f.files && f.files[0]) ? URL.createObjectURL(f.files[0]) : "";
+            showImg();
+        });
+        ["x", "y", "w", "h"].forEach(function (c) { if (F[k][c]) F[k][c].addEventListener("input", draw); });
     });
-    ["x", "y", "w", "h"].forEach(function (k) { F[k].addEventListener("input", draw); });
+    tabs.forEach(function (b) {
+        b.addEventListener("click", function () {
+            mode = b.dataset.m;
+            tabs.forEach(function (x) { x.classList.toggle("active", x === b); });
+            box.classList.toggle("m", mode === "m");
+            showImg(); draw();
+        });
+    });
     window.addEventListener("resize", draw);
 
     var down = false;
     function move(ev) {
-        var r = box.getBoundingClientRect(), s = r.width / REF_W;
-        var w = Math.max(1, num(F.w, 86)), h = Math.max(1, num(F.h, 101));
-        F.x.value = Math.round((ev.clientX - r.left) / s - w / 2);
-        F.y.value = Math.round((ev.clientY - r.top) / s - h / 2);
+        var r = box.getBoundingClientRect(), R = REF[mode], f = F[mode], s = r.width / R[0];
+        var w = Math.max(1, num(f.w, DEF[mode][0])), h = Math.max(1, num(f.h, DEF[mode][1]));
+        f.x.value = Math.round((ev.clientX - r.left) / s - w / 2);
+        f.y.value = Math.round((ev.clientY - r.top) / s - h / 2);
         draw();
     }
     box.addEventListener("pointerdown", function (ev) { down = true; box.setPointerCapture(ev.pointerId); move(ev); ev.preventDefault(); });
     box.addEventListener("pointermove", function (ev) { if (down) move(ev); });
     box.addEventListener("pointerup", function () { down = false; });
     box.addEventListener("pointercancel", function () { down = false; });
-    draw();
+    showImg(); draw();
 });
 </script>';
 }

@@ -2820,9 +2820,10 @@
 					st.setProperty('--logo-vw', '1918'); st.setProperty('--logo-vh', '876');
 					st.setProperty('--logo-x', LG.x);   st.setProperty('--logo-y', LG.y);
 					st.setProperty('--logo-w', LG.w);   st.setProperty('--logo-h', LG.h);
+					var LM = p.logo_m || {x: 150, y: 610, w: 75, h: 52};
 					st.setProperty('--logo-mobile-vw', '375'); st.setProperty('--logo-mobile-vh', '667');
-					st.setProperty('--logo-mobile-x', '150');  st.setProperty('--logo-mobile-y', '610');
-					st.setProperty('--logo-mobile-w', '75');   st.setProperty('--logo-mobile-h', '52');
+					st.setProperty('--logo-mobile-x', LM.x);   st.setProperty('--logo-mobile-y', LM.y);
+					st.setProperty('--logo-mobile-w', LM.w);   st.setProperty('--logo-mobile-h', LM.h);
 				}
 			}
 
