@@ -118,14 +118,19 @@ function cms_load_testimonials(): array
             if (mb_strlen($t) <= 130) return [$t, false];
             return [rtrim(mb_substr($t, 0, 125)) . '...', true];
         };
-        [$sid, $long] = $cut($tid);
-        [$sen]        = $cut($ten);
+        $noMore = !empty($r['readmore_off']);
+        if ($noMore) { $sid = $tid; $sen = $ten; $long = false; }
+        else { [$sid, $long] = $cut($tid); [$sen] = $cut($ten); }
+        $tagId = trim((string)($r['tag_id'] ?? '')) !== '' ? trim($r['tag_id']) : 'Pelanggan Setia Web JSR Store';
+        $tagEn = trim((string)($r['tag_en'] ?? '')) !== '' ? trim($r['tag_en']) : 'Loyal Customer of JSR Store Web';
         $out[] = [
             'name'     => $r['name'],
             'role'     => cms_bi($r, 'role'),
             'full'     => ['id' => $tid, 'en' => $ten],
             'short'    => ['id' => $sid, 'en' => $sen],
             'long'     => $long,
+            'no_more'  => $noMore,
+            'tag'      => ['id' => $tagId, 'en' => $tagEn],
             'show_photo' => ($r['avatar_mode'] ?? 'photo') !== 'text' && trim((string)$r['photo']) !== '',
             'photo'    => $r['photo'],
             'stars'    => max(1, min(5, (int)$r['stars'])),
@@ -188,4 +193,32 @@ function cms_steps_html(string $lang): string
             . ($d !== '' ? '<span>' . nl2br(htmlspecialchars($d, ENT_QUOTES, 'UTF-8')) . '</span>' : '') . '</div></div>';
     }
     return $h . '</div>';
+}
+
+
+// Status CS: 'online' | 'offline' | 'wa' (ikon), dihitung dari pengaturan (termasuk jadwal otomatis)
+function cms_wa_state(): array
+{
+    $mode = setting('wa_status', 'online');
+    $days = array_filter(array_map('intval', explode(',', (string)setting('wa_work_days', '1,2,3,4,5'))));
+    $o = setting('wa_open', '08:00'); $c = setting('wa_close', '17:00');
+    $tzn = setting('wa_tz', 'Asia/Jakarta');
+    $abbr = ['Asia/Jakarta' => 'WIB', 'Asia/Makassar' => 'WITA', 'Asia/Jayapura' => 'WIT'][$tzn] ?? 'WIB';
+    $nm = [1 => 'Sen', 2 => 'Sel', 3 => 'Rab', 4 => 'Kam', 5 => 'Jum', 6 => 'Sab', 7 => 'Min'];
+    sort($days);
+    $label = '';
+    if ($days) {
+        $label = count($days) === 7 ? 'Setiap hari' : implode(', ', array_map(function ($d) use ($nm) { return $nm[$d] ?? ''; }, $days));
+        $label .= ' ' . str_replace(':', '.', $o) . '-' . str_replace(':', '.', $c) . ' ' . $abbr;
+    }
+    if ($mode !== 'auto') return ['mode' => $mode, 'online' => $mode !== 'offline', 'label' => ''];
+    try { $now = new DateTime('now', new DateTimeZone($tzn)); } catch (Exception $e) { $now = new DateTime('now'); }
+    $dow = (int)$now->format('N'); $t = $now->format('H:i');
+    if ($o === $c) $on = in_array($dow, $days, true);
+    elseif ($o < $c) $on = in_array($dow, $days, true) && $t >= $o && $t < $c;
+    else {   // lewat tengah malam
+        $prev = $dow === 1 ? 7 : $dow - 1;
+        $on = (in_array($dow, $days, true) && $t >= $o) || (in_array($prev, $days, true) && $t < $c);
+    }
+    return ['mode' => 'auto', 'online' => $on, 'label' => $label];
 }

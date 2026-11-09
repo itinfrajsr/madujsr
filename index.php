@@ -344,6 +344,13 @@
 			.testimonial .testimonial-item h4 {
 				margin-bottom: 0px; color: #211d17 !important; font-size: 16px; font-weight: 800; line-height: 1.3;
 			}
+			.testimonial .testimonial-item .testimonial-text.no-more .short-text { display: none; }
+			.testimonial .testimonial-item .testimonial-text.no-more .full-text { display: block; }
+			.testimonial .testimonial-item .t-tag {
+				display: inline-block; align-self: center; margin: 5px 0 3px; padding: 2px 12px;
+				background: #fff4d6; border: 1px solid #e6c36a; border-radius: 20px;
+				color: #8a5a0b; font-size: 11px; font-weight: 700; line-height: 1.5;
+			}
 			.testimonial .testimonial-item .stars {
 				display: flex; justify-content: center; gap: 3px; color: #d9a441; font-size: 11px; margin-top: 2px;
 			}
@@ -748,6 +755,13 @@
 				background: #25d366; border: 2px solid #211d17; border-radius: 50%;
 				color: #ffffff; font-size: 12px; line-height: 1;
 			}
+			.wa-consult .wa-avatar .wa-status {
+				position: absolute; right: -1px; bottom: -1px; width: 15px; height: 15px; border-radius: 50%;
+				background: #25d366; border: 2.5px solid #211d17; box-sizing: border-box;
+			}
+			.wa-consult .wa-avatar .wa-status.is-on { animation: waPulse 1.8s ease-out infinite; }
+			.wa-consult .wa-avatar .wa-status.is-off { background: #9aa0a6; }
+			@keyframes waPulse { 0% { box-shadow: 0 0 0 0 rgba(37,211,102,.65); } 70% { box-shadow: 0 0 0 8px rgba(37,211,102,0); } 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); } }
 			.wa-consult .wa-text {
 				display: flex; flex-direction: column; gap: 3px; padding-right: 22px;
 				white-space: nowrap; opacity: 0; transform: translateX(10px);
@@ -2008,13 +2022,14 @@
 				<div class="owl-carousel owl-theme testimonial-carousel">
 					<?php foreach ($testimonials as $t): ?>
 					<div class="testimonial-item text-center p-4">
-						<p class="testimonial-text">
+						<p class="testimonial-text<?= $t['no_more'] ? ' no-more' : '' ?>">
 							<span class="short-text"<?= bia($t['short']['id'], $t['short']['en']) ?>><?= e($t['short']['id']) ?></span>
 							<span class="full-text"<?= bia($t['full']['id'], $t['full']['en']) ?>><?= e($t['full']['id']) ?></span>
 						</p>
 						<?php if ($t['long']): ?><button class="read-more-btn" onclick="toggleTestimonial(this)" data-id="Baca Selengkapnya" data-en="Read More">Baca Selengkapnya</button><?php endif; ?>
 						<?php if ($t['show_photo']): ?><div class="d-flex justify-content-center"><img src="<?= e($t['photo']) ?>" class="rounded-circle border border-4 border-warning" style="width: 60px; height: 60px; object-fit: cover;" alt="<?= e($t['name']) ?>" loading="lazy" decoding="async"></div><?php endif; ?>
 						<h4 class="text-dark"<?= !$t['show_photo'] ? ' style="margin-top:6px"' : '' ?>><?= e($t['name']) ?></h4>
+						<?php if (!$t['show_photo']): ?><span class="t-tag"<?= bia($t['tag']['id'], $t['tag']['en']) ?>><?= e($t['tag']['id']) ?></span><?php endif; ?>
 						<p class="m-0" style="font-size: 12px; color: #666;"<?= bia($t['role']['id'], $t['role']['en']) ?>><?= e($t['role']['id']) ?></p>
 						<div class="d-flex justify-content-center text-warning stars"><?php for ($s = 0; $s < $t['stars']; $s++): ?><i class="fa fa-star"></i><?php endfor; ?></div>
 					</div>
@@ -2278,7 +2293,9 @@
 					<i class="fa fa-user"></i>
 					<img src="<?= e(setting('wa_avatar') ?: 'assets/img/cs/cs.png') ?>" alt="Customer Service" class="wa-photo" onerror="this.style.display='none'">
 				</span>
-				<span class="wa-badge"><i class="fa fa-whatsapp"></i></span>
+				<?php $waS = cms_wa_state(); ?>
+				<?php if ($waS['mode'] === 'wa'): ?><span class="wa-badge"><i class="fa fa-whatsapp"></i></span>
+				<?php else: $waTip = ($waS['online'] ? 'Online' : 'Offline') . ($waS['label'] !== '' ? ' · Jam kerja: ' . $waS['label'] : ''); ?><span class="wa-status <?= $waS['online'] ? 'is-on' : 'is-off' ?>" title="<?= e($waTip) ?>" role="img" aria-label="<?= e($waTip) ?>"></span><?php endif; ?>
 			</span>
 			<span class="wa-text">
 				<span class="wa-title"<?= sa('wa_title') ?>><?= st('wa_title') ?></span>
@@ -2316,6 +2333,25 @@
 
 		<script>
 			window.PRODUCT_HASHES = <?= json_encode(array_keys($product_hash_map), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+			/* Teks testimoni tanpa tombol: perkecil huruf bertahap agar muat di tinggi kartu yang sama */
+			function fitTestimonials() {
+				document.querySelectorAll('.testimonial-text.no-more').forEach(function (el) {
+					el.style.fontSize = '';
+					var fs = parseFloat(getComputedStyle(el).fontSize) || 13, min = 9;
+					while (el.scrollHeight > el.clientHeight + 1 && fs > min) { fs -= 0.5; el.style.fontSize = fs + 'px'; }
+				});
+			}
+			(function () {
+				var t = null;
+				function later() { clearTimeout(t); t = setTimeout(fitTestimonials, 120); }
+				window.addEventListener('load', function () { later(); setTimeout(fitTestimonials, 800); });
+				window.addEventListener('resize', later);
+				if (document.fonts && document.fonts.ready) document.fonts.ready.then(later);
+				var sec = document.querySelector('.testimonial');
+				if (sec && window.MutationObserver) new MutationObserver(function (m) {
+					for (var i = 0; i < m.length; i++) { if (m[i].type === 'characterData' || m[i].type === 'childList') { later(); break; } }
+				}).observe(sec, { childList: true, characterData: true, subtree: true });
+			})();
 			function toggleTestimonial(btn) {
 				var textContainer = btn.previousElementSibling;
 				if (textContainer.classList.contains('show-full')) {
@@ -2619,7 +2655,12 @@
 					var x = cur.x + fx * cur.w, y = cur.y + fy * cur.h;
 					var w = fw * cur.w,         h = fh * cur.h;
 
-					if (x >= 0 && y >= 0 && x + w <= cw && y + h <= ch) {
+					/* jepit ke dalam area gambar agar tombol tidak hilang bila posisi di CMS melewati tepi */
+					if (w <= cw && h <= ch) {
+						x = Math.min(Math.max(x, 0), cw - w);
+						y = Math.min(Math.max(y, 0), ch - h);
+					}
+					if (x >= 0 && y >= 0 && x + w <= cw + 0.5 && y + h <= ch + 0.5) {
 						ppBadgeEl.style.left   = x + 'px';
 						ppBadgeEl.style.top    = y + 'px';
 						ppBadgeEl.style.width  = w + 'px';

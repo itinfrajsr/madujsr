@@ -114,6 +114,17 @@ function cms_collect_fields(array $fields, array $post, array $files, ?array $ex
                 if ($v !== '' && !preg_match('/^#[0-9a-fA-F]{6}$/', $v)) { $err[] = "$label harus berupa kode warna hex, mis. #E9B949."; $v = $existing[$n] ?? ''; }
                 break;
 
+            case 'time':
+                $v = trim($raw);
+                if (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $v)) { $err[] = "$label harus berformat jam HH:MM."; $v = $existing[$n] ?? ($f['default'] ?? ''); }
+                break;
+
+            case 'days':
+                $ds = array_values(array_unique(array_filter(array_map('intval', explode(',', $raw)), function ($d) { return $d >= 1 && $d <= 7; })));
+                sort($ds);
+                $v = implode(',', $ds);
+                break;
+
             case 'select':
                 $v = $raw;
                 if (!array_key_exists($n, $post)) {
@@ -217,6 +228,20 @@ function cms_render_field(array $f, $val, bool $isEdit): string
                 . '<input type="text" id="' . $id . '" name="' . e($n) . '" value="' . e($val) . '" maxlength="7" placeholder="#RRGGBB" style="max-width:160px"'
                 . ' oninput="if(/^#[0-9a-fA-F]{6}$/.test(this.value))this.previousElementSibling.value=this.value">'
                 . '</div>' . $help . '</div>';
+
+        case 'time':
+            return '<div class="field">' . $label . '<input type="time" id="' . $id . '" name="' . e($n) . '" value="' . e($val) . '" style="max-width:180px">' . $help . '</div>';
+
+        case 'days':
+            $on = array_filter(explode(',', $val), 'strlen');
+            $names = [1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu', 7 => 'Minggu'];
+            $h = '<div class="field">' . $label . '<div class="daysrow" id="' . $id . '_d"><input type="hidden" id="' . $id . '" name="' . e($n) . '" value="' . e(implode(',', $on)) . '">';
+            foreach ($names as $k => $t) {
+                $h .= '<label class="daychip"><input type="checkbox" value="' . $k . '"' . (in_array((string)$k, $on, true) ? ' checked' : '') . '><span>' . $t . '</span></label>';
+            }
+            $h .= '</div>' . $help . '<script>(function(){var w=document.getElementById("' . $id . '_d"),h=document.getElementById("' . $id . '");'
+               . 'w.addEventListener("change",function(){var a=[];w.querySelectorAll("input[type=checkbox]:checked").forEach(function(c){a.push(c.value)});h.value=a.join(",");});})();</script></div>';
+            return $h;
 
         case 'select':
             $o = '';
@@ -388,7 +413,8 @@ document.addEventListener("DOMContentLoaded", function () {
         var x = num(f.x, 0), y = num(f.y, 0), w = Math.max(1, num(f.w, DEF[mode][0])), h = Math.max(1, num(f.h, DEF[mode][1]));
         logo.style.left = x * s + "px"; logo.style.top = y * s + "px";
         logo.style.width = w * s + "px"; logo.style.height = h * s + "px";
-        info.textContent = "X " + Math.round(x) + " · Y " + Math.round(y) + " · " + Math.round(w) + " × " + Math.round(h) + " px (acuan " + R[0] + " × " + R[1] + ")";
+        var warn = (x + w > R[0] || y + h > R[1] || x < 0 || y < 0) ? " ⚠ tombol melewati tepi gambar, geser ke dalam" : "";
+        info.textContent = "X " + Math.round(x) + " · Y " + Math.round(y) + " · " + Math.round(w) + " × " + Math.round(h) + " px (acuan " + R[0] + " × " + R[1] + ")" + warn;
     }
     function urlOf(v) { v = (v || "").trim(); return !v ? "" : (/^https?:\/\//i.test(v) ? v : "../../" + v.replace(/ /g, "%20")); }
     function curSrc() {
@@ -423,8 +449,8 @@ document.addEventListener("DOMContentLoaded", function () {
     function move(ev) {
         var r = box.getBoundingClientRect(), R = REF[mode], f = F[mode], s = r.width / R[0];
         var w = Math.max(1, num(f.w, DEF[mode][0])), h = Math.max(1, num(f.h, DEF[mode][1]));
-        f.x.value = Math.round((ev.clientX - r.left) / s - w / 2);
-        f.y.value = Math.round((ev.clientY - r.top) / s - h / 2);
+        f.x.value = Math.max(0, Math.min(R[0] - w, Math.round((ev.clientX - r.left) / s - w / 2)));
+        f.y.value = Math.max(0, Math.min(R[1] - h, Math.round((ev.clientY - r.top) / s - h / 2)));
         draw();
     }
     box.addEventListener("pointerdown", function (ev) { down = true; box.setPointerCapture(ev.pointerId); move(ev); ev.preventDefault(); });
