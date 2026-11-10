@@ -2333,6 +2333,41 @@
 
 		<script>
 			window.PRODUCT_HASHES = <?= json_encode(array_keys($product_hash_map), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+			/* Status CS online/offline realtime: cek ke server tiap 30 detik + saat tab kembali aktif */
+			(function () {
+				var URL_ST = <?= json_encode(rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/') . '/wa-status.php') ?>;
+				var av = document.querySelector('.wa-consult .wa-avatar');
+				if (!av) return;
+				var last = '';
+				function apply(s) {
+					var key = s.mode + '|' + (s.online ? 1 : 0) + '|' + s.label;
+					if (key === last) return;
+					last = key;
+					var old = av.querySelector('.wa-status, .wa-badge');
+					if (s.mode === 'wa') {
+						if (old && old.classList.contains('wa-badge')) return;
+						var b = document.createElement('span'); b.className = 'wa-badge'; b.innerHTML = '<i class="fa fa-whatsapp"></i>';
+						if (old) old.replaceWith(b); else av.appendChild(b);
+						return;
+					}
+					var tip = (s.online ? 'Online' : 'Offline') + (s.label ? ' \u00b7 Jam kerja: ' + s.label : '');
+					var d = (old && old.classList.contains('wa-status')) ? old : document.createElement('span');
+					d.className = 'wa-status ' + (s.online ? 'is-on' : 'is-off');
+					d.title = tip; d.setAttribute('role', 'img'); d.setAttribute('aria-label', tip);
+					if (d !== old) { if (old) old.replaceWith(d); else av.appendChild(d); }
+				}
+				function check() {
+					if (document.hidden) return;
+					fetch(URL_ST + '?_=' + Date.now(), { cache: 'no-store', credentials: 'same-origin' })
+						.then(function (r) { return r.ok ? r.json() : null; })
+						.then(function (s) { if (s && typeof s.online !== 'undefined') apply(s); })
+						.catch(function () {});
+				}
+				setInterval(check, 30000);
+				document.addEventListener('visibilitychange', function () { if (!document.hidden) check(); });
+				window.addEventListener('focus', check);
+				window.addEventListener('online', check);
+			})();
 			/* Teks testimoni tanpa tombol: perkecil huruf bertahap agar muat di tinggi kartu yang sama */
 			function fitTestimonials() {
 				document.querySelectorAll('.testimonial-text.no-more').forEach(function (el) {
